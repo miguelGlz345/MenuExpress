@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "173622940084",
+    "firebase_url": "https://menuexpress-73046.firebaseio.com",
+    "project_id": "menuexpress-73046",
+    "storage_bucket": "menuexpress-73046.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173622940084:android:93143785c858aa2c",
+        "android_client_info": {
+          "package_name": "com.menuexpress.equipo6.menuexpress"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173622940084-7b51q2bnq9fijh63hiqfg41g2mvbdi21.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.menuexpress.equipo6.menuexpress",
+            "certificate_hash": "1372767910d710f0ab5df930a5515e9fc3c7333a"
+          }
+        },
+        {
+          "client_id": "173622940084-ra7jstfuejhga974acpanvd3vgjumtar.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBctJ6HJmzR_VhFOrKYjXtuOdT5ifZrMzw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173622940084-ra7jstfuejhga974acpanvd3vgjumtar.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
