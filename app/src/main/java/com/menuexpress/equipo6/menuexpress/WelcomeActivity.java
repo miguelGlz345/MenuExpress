@@ -1,15 +1,20 @@
 package com.menuexpress.equipo6.menuexpress;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.LinearLayout;
 
 public class WelcomeActivity extends AppCompatActivity {
 
     LinearLayout l1, l2;
     Animation uptodown, downtoup;
+    Button bRegistro, bIngreso;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,5 +26,32 @@ public class WelcomeActivity extends AppCompatActivity {
         downtoup = AnimationUtils.loadAnimation(this, R.anim.downtoup);
         l1.setAnimation(uptodown);
         l2.setAnimation(downtoup);
+
+        bRegistro = (Button) findViewById(R.id.btnRegistro);
+        bIngreso = (Button) findViewById(R.id.btnInicioSesion);
+
+        bRegistro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Registro();
+            }
+        });
+
+        bIngreso.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                iniciarSesion();
+            }
+        });
+    }
+
+    public void iniciarSesion() {
+        Intent intent = new Intent(WelcomeActivity.this, IngresoActivity.class);
+        startActivity(intent);
+    }
+
+    public void Registro() {
+        Intent intent = new Intent(WelcomeActivity.this, RegistroActivity.class);
+        startActivity(intent);
     }
 }
