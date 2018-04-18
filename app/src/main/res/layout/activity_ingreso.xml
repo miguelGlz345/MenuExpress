@@ -68,15 +68,31 @@
                 app:met_primaryColor="@android:color/white"
                 app:met_singleLineEllipsis="true" />
 
-            <CheckBox
+            <com.rey.material.widget.CheckBox
                 android:id="@+id/cbShow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@+id/edtContraseña"
                 android:layout_below="@+id/edtContraseña"
+                android:gravity="center_vertical"
                 android:text="Mostrar"
-                android:textColor="@color/blanco" />
+                android:textColor="@color/blanco"
+                app:cbd_strokeColor="@android:color/white"
+                app:cbd_tickColor="@color/colorPrimaryDark" />
         </LinearLayout>
+
+        <com.rey.material.widget.CheckBox
+            android:id="@+id/cbRecuerdame"
+            style="@style/Material.Drawable.CheckBox"
+            cbd_tickColor="@color/colorPrimaryDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:gravity="center_vertical"
+            android:text="Recuerdame"
+            android:textColor="@android:color/white"
+            app:cbd_strokeColor="@android:color/white"
+            app:cbd_tickColor="@color/colorPrimaryDark" />
 
         <info.hoang8f.widget.FButton
             android:id="@+id/btnIngresar"

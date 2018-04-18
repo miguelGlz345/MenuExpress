@@ -2,42 +2,49 @@ package com.menuexpress.equipo6.menuexpress;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.menuexpress.equipo6.menuexpress.Model.Usuario;
 
 public class IngresoActivity extends AppCompatActivity {
 
-    TextView edtUsuario, edtContraseña;
+    TextView edtEmail, edtContraseña;
     Button bIngreso;
-    CheckBox cbMostrar;
+    com.rey.material.widget.CheckBox cbMostrar;
+
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference tabla_usuario;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ingreso);
 
-        edtUsuario = (TextView) findViewById(R.id.edtEmail);
+        edtEmail = (TextView) findViewById(R.id.edtEmail);
         edtContraseña = (TextView) findViewById(R.id.edtContraseña);
         bIngreso = (Button) findViewById(R.id.btnIngresar);
-        cbMostrar = (CheckBox) findViewById(R.id.cbShow);
+        cbMostrar = (com.rey.material.widget.CheckBox) findViewById(R.id.cbShow);
 
         //Inicializar Firebase
-        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        final DatabaseReference tabla_usuario = firebaseDatabase.getReference("usuario");
+        //Inicializar Firebase
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        tabla_usuario = firebaseDatabase.getReference("usuario");
 
         cbMostrar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -55,13 +62,27 @@ public class IngresoActivity extends AppCompatActivity {
         bIngreso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tabla_usuario.addValueEventListener(new ValueEventListener() {
+
+
+                firebaseAuth.signInWithEmailAndPassword(edtEmail.getText().toString(), edtContraseña.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if (task.isSuccessful()) {
+                            Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
+                            irMain();
+                        } else {
+                            Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                /*tabla_usuario.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         //Verificar si el usuario existe
-                        if (dataSnapshot.child(edtUsuario.getText().toString()).exists()) {
+                        if (dataSnapshot.child(edtEmail.getText().toString()).exists()) {
                             //Obtener la informacion del usuario
-                            Usuario usuario = dataSnapshot.child(edtUsuario.getText().toString()).getValue(Usuario.class);
+                            Usuario usuario = dataSnapshot.child(edtEmail.getText().toString()).getValue(Usuario.class);
                             if (usuario.getContraseña().equals(edtContraseña.getText().toString())) {
                                 Toast.makeText(IngresoActivity.this, "Inicio de sesión correcto", Toast.LENGTH_SHORT).show();
                                 irMain();
@@ -77,14 +98,23 @@ public class IngresoActivity extends AppCompatActivity {
                     public void onCancelled(DatabaseError databaseError) {
 
                     }
-                });
+                });*/
             }
         });
-
     }
 
     public void irMain() {
         Intent intent = new Intent(IngresoActivity.this, MainActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser != null) {
+            irMain();
+        }
     }
 }

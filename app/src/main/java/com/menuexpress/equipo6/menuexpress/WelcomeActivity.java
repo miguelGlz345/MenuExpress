@@ -9,6 +9,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class WelcomeActivity extends AppCompatActivity {
 
     LinearLayout l1, l2;
@@ -53,5 +56,16 @@ public class WelcomeActivity extends AppCompatActivity {
     public void Registro() {
         Intent intent = new Intent(WelcomeActivity.this, RegistroActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 }

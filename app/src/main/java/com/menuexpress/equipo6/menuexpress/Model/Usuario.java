@@ -1,6 +1,7 @@
 package com.menuexpress.equipo6.menuexpress.Model;
 
 public class Usuario {
+    private long id;
     private String nombre;
     private String ap_paterno;
     private String ap_materno;
@@ -17,14 +18,22 @@ public class Usuario {
         this.contraseña = contraseña;
     }
 
-    public Usuario(String nombre, String ap_paterno, String ap_materno, String celular, String direccion, String email, String contraseña) {
+    public Usuario(long id, String nombre, String ap_paterno, String ap_materno, String celular, String direccion, String email) {
+        this.id = id;
         this.nombre = nombre;
         this.ap_paterno = ap_paterno;
         this.ap_materno = ap_materno;
         this.celular = celular;
         this.direccion = direccion;
         this.email = email;
-        this.contraseña = contraseña;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getNombre() {

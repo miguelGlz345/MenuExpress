@@ -26,18 +26,25 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
+    //Librerias actualizadas
+    implementation 'com.android.support:customtabs:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support:support-media-compat:27.1.1'
+    implementation 'com.android.support:cardview-v7:27.1.1'
     api 'com.android.support:support-v4:27.1.1'
 
     //Firebase
-    implementation 'com.google.firebase:firebase-core:12.0.1'
-    implementation 'com.google.firebase:firebase-database:12.0.1'
-    implementation 'com.google.firebase:firebase-auth:12.0.1'
+    implementation 'com.google.android.gms:play-services-ads:15.0.0'
+    implementation 'com.google.firebase:firebase-core:15.0.0'
+    implementation 'com.google.firebase:firebase-database:15.0.0'
+    implementation 'com.google.firebase:firebase-auth:15.0.0'
 
-    //Librerias de diseño
+    //Librerias agregadas
     implementation('com.github.jd-alexander:android-flat-button:v1.1')
     implementation 'com.rengwuxian.materialedittext:library:2.1.4'
+    implementation 'io.paperdb:paperdb:2.1'
+    implementation 'com.github.rey5137:material:1.2.4'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
