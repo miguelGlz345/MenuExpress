@@ -51,7 +51,7 @@ public class RegistroActivity extends AppCompatActivity {
         edtDir = (EditText) findViewById(R.id.edtDireccion);
         edtCorreo = (EditText) findViewById(R.id.edtCorreo);
         edtPassword = (EditText) findViewById(R.id.edtPassword);
-        btnRegistrar = (Button) findViewById(R.id.btnIngresar);
+        btnRegistrar = (Button) findViewById(R.id.btnRegistroR);
         cbMostrar = (CheckBox) findViewById(R.id.cbMostrar);
 
         //Inicializar Firebase
@@ -172,7 +172,7 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     public void irMain() {
-        Intent intent = new Intent(RegistroActivity.this, MainActivity.class);
+        Intent intent = new Intent(RegistroActivity.this, Inicio.class);
         startActivity(intent);
     }
 

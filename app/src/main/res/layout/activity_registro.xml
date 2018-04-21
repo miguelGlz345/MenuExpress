@@ -161,7 +161,7 @@
             </LinearLayout>
 
             <info.hoang8f.widget.FButton
-                android:id="@+id/btnIngresar"
+                android:id="@+id/btnRegistroR"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

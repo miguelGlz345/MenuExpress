@@ -17,14 +17,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.menuexpress.equipo6.menuexpress.Common.Common;
+import com.menuexpress.equipo6.menuexpress.Model.Usuario;
+
+import io.paperdb.Paper;
 
 public class IngresoActivity extends AppCompatActivity {
 
-    TextView edtEmail, edtContraseña;
-    Button bIngreso;
-    com.rey.material.widget.CheckBox cbMostrar;
+    private TextView edtEmail, edtContraseña;
+    private Button bIngreso;
+    private com.rey.material.widget.CheckBox cbMostrar;
+    private com.rey.material.widget.CheckBox cbRecordar;
 
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference tabla_usuario;
@@ -37,10 +45,10 @@ public class IngresoActivity extends AppCompatActivity {
 
         edtEmail = (TextView) findViewById(R.id.edtEmail);
         edtContraseña = (TextView) findViewById(R.id.edtContraseña);
-        bIngreso = (Button) findViewById(R.id.btnIngresar);
+        bIngreso = (Button) findViewById(R.id.btnIngresarI);
         cbMostrar = (com.rey.material.widget.CheckBox) findViewById(R.id.cbShow);
+        cbRecordar = (com.rey.material.widget.CheckBox) findViewById(R.id.cbRecuerdame);
 
-        //Inicializar Firebase
         //Inicializar Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -63,14 +71,53 @@ public class IngresoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
                 firebaseAuth.signInWithEmailAndPassword(edtEmail.getText().toString(), edtContraseña.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
-                            Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
-                            irMain();
+
+                            tabla_usuario.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    String user_id = firebaseAuth.getCurrentUser().getUid();
+
+                                    //guardar email y contraseña
+                                    if (cbRecordar.isChecked()) {
+                                        Paper.book().write(Common.EMAIL_KEY, user_id);
+                                        Paper.book().write(Common.PASS_KEY, user_id);
+                                    }
+
+                                    //Verificar si el usuario existe
+                                    if (dataSnapshot.child(user_id).exists()) {
+                                        //Obtener la informacion del usuario
+                                        Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
+                                        //Se guarda el usuario actual
+
+                                        Intent intent = new Intent(IngresoActivity.this, Inicio.class);
+                                        Common.currentUser = usuario;
+                                        startActivity(intent);
+                                        finish();
+                                        Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
+                                        //irAInicio();
+
+                                    } else {
+                                        Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                /*if (usuario.getContraseña().equals(edtContraseña.getText().toString())) {
+
+                                                               } else {
+                                                                   Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                                                               }*/
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
                         } else {
                             Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                         }
@@ -103,9 +150,10 @@ public class IngresoActivity extends AppCompatActivity {
         });
     }
 
-    public void irMain() {
-        Intent intent = new Intent(IngresoActivity.this, MainActivity.class);
+    public void irAInicio() {
+        Intent intent = new Intent(IngresoActivity.this, Inicio.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -114,7 +162,7 @@ public class IngresoActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         if (currentUser != null) {
-            irMain();
+            irAInicio();
         }
     }
 }

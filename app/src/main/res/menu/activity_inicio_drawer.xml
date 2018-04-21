@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_menu"
+            android:icon="@drawable/ic_restaurant_black_24dp"
+            android:iconTint="@color/blanco"
+            android:title="Menu" />
+
+        <item
+            android:id="@+id/nav_carro"
+            android:icon="@drawable/ic_shopping_cart_black_24dp"
+            android:iconTint="@color/blanco"
+            android:title="Carrito" />
+
+        <item
+            android:id="@+id/nav_pedido"
+            android:icon="@drawable/ic_access_time_black_24dp"
+            android:iconTint="@color/blanco"
+            android:title="Pedidos" />
+
+        <item
+            android:id="@+id/nav_salir"
+            android:icon="@drawable/ic_exit_to_app_black_24dp"
+            android:iconTint="@color/blanco"
+            android:title="Salir" />
+    </group>
+
+
+</menu>

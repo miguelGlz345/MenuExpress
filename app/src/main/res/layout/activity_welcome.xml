@@ -37,7 +37,7 @@
         android:weightSum="2">
 
         <info.hoang8f.widget.FButton
-            android:id="@+id/btnRegistro"
+            android:id="@+id/btnRegistroW"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
@@ -51,7 +51,7 @@
             app:shadowHeight="5dp" />
 
         <info.hoang8f.widget.FButton
-            android:id="@+id/btnInicioSesion"
+            android:id="@+id/btnIngresarW"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
