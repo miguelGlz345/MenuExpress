@@ -8,24 +8,24 @@ import android.widget.TextView;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.R;
 
-public class MenuViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class ComidaViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView txtMenuNombre;
-    public ImageView imageView;
+    public TextView nombre_comida;
+    public ImageView imagen_comida;
 
     private ItemClickListener itemClickListener;
 
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
-    public MenuViewHolder(View itemView) {
+    public ComidaViewHolder(View itemView) {
         super(itemView);
 
-        txtMenuNombre = (TextView) itemView.findViewById(R.id.menu_nombre);
-        imageView = (ImageView) itemView.findViewById(R.id.menu_imagen);
+        nombre_comida = (TextView) itemView.findViewById(R.id.comida_nombre);
+        imagen_comida = (ImageView) itemView.findViewById(R.id.comida_imagen);
 
         itemView.setOnClickListener(this);
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
     @Override

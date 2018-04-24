@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
+import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Categoria;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.MenuViewHolder;
 import com.squareup.picasso.Picasso;
@@ -37,9 +38,9 @@ public class Inicio extends AppCompatActivity
 
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    RecyclerView.LayoutManager layoutManager;
-    FirebaseRecyclerAdapter<Categoria, MenuViewHolder> adapter;
-    private TextView txtNombre;
+    private RecyclerView.LayoutManager layoutManager;
+    private FirebaseRecyclerAdapter<Categoria, MenuViewHolder> adapter;
+    private TextView txtNombreUsuario;
     private RecyclerView recycler_menu;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -85,8 +86,8 @@ public class Inicio extends AppCompatActivity
 
         //Colocar el nombre del usuario
         View headerView = navigationView.getHeaderView(0);
-        txtNombre = (TextView) headerView.findViewById(R.id.textNombre);
-        txtNombre.setText(Common.currentUser.getNombre() + " " + Common.currentUser.getAp_paterno() + " " + Common.currentUser.getAp_materno());
+        txtNombreUsuario = (TextView) headerView.findViewById(R.id.textNombre);
+        txtNombreUsuario.setText(Common.currentUser.getNombre() + " " + Common.currentUser.getAp_paterno() + " " + Common.currentUser.getAp_materno());
 
         //cargar menu
         recycler_menu = (RecyclerView) findViewById(R.id.reclycler_menu);
@@ -108,6 +109,17 @@ public class Inicio extends AppCompatActivity
                 holder.txtMenuNombre.setText(model.getNombre());
                 Picasso.with(Inicio.this).load(model.getImagen())
                         .into(holder.imageView);
+
+                final Categoria clickItem = model;
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        //Se obtiene el id de categoría
+                        Intent intent = new Intent(Inicio.this, ListaComida.class);
+                        intent.putExtra("categoriaId", adapter.getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
             }
 
             @NonNull
@@ -186,6 +198,7 @@ public class Inicio extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+        cargarMenu();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             //userid = firebaseAuth.getCurrentUser().getUid();
