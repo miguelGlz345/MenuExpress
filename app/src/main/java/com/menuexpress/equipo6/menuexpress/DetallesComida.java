@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -14,7 +16,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Model.Comida;
+import com.menuexpress.equipo6.menuexpress.Model.Pedido;
 import com.squareup.picasso.Picasso;
 
 public class DetallesComida extends AppCompatActivity {
@@ -31,6 +35,7 @@ public class DetallesComida extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference comida;
 
+    private Comida comidaActual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,21 @@ public class DetallesComida extends AppCompatActivity {
 
         btnNumero = (ElegantNumberButton) findViewById(R.id.btn_cant);
         btnCarro = (FloatingActionButton) findViewById(R.id.btn_carro);
+
+        btnCarro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Database(getBaseContext()).agregarCarrito(new Pedido(
+                        comidaId,
+                        comidaActual.getNombre(),
+                        btnNumero.getNumber(),
+                        comidaActual.getPrecio(),
+                        comidaActual.getDescuento()
+
+                ));
+                Toast.makeText(DetallesComida.this, "Agregado al carrito", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         nombre_comida = (TextView) findViewById(R.id.nombre_comida);
         precio_comida = (TextView) findViewById(R.id.comida_precio);
@@ -67,15 +87,15 @@ public class DetallesComida extends AppCompatActivity {
         comida.child(comidaId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Comida comida = dataSnapshot.getValue(Comida.class);
+                comidaActual = dataSnapshot.getValue(Comida.class);
 
                 //colocar imagen
-                Picasso.with(getBaseContext()).load(comida.getImagen()).into(imagen_comida);
+                Picasso.with(getBaseContext()).load(comidaActual.getImagen()).into(imagen_comida);
 
-                collapsingToolbarLayout.setTitle(comida.getNombre());
-                precio_comida.setText(comida.getPrecio());
-                nombre_comida.setText(comida.getNombre());
-                descrip_comida.setText(comida.getDescripcion());
+                collapsingToolbarLayout.setTitle(comidaActual.getNombre());
+                precio_comida.setText(comidaActual.getPrecio());
+                nombre_comida.setText(comidaActual.getNombre());
+                descrip_comida.setText(comidaActual.getDescripcion());
 
             }
 

@@ -7,16 +7,18 @@ public class Comida {
     private String descripcion;
     private String precio;
     private String idCat;
+    private String descuento;
 
     public Comida() {
     }
 
-    public Comida(String nombre, String imagen, String descripcion, String precio, String idCat) {
+    public Comida(String nombre, String imagen, String descripcion, String precio, String idCat, String descuento) {
         this.nombre = nombre;
         this.imagen = imagen;
         this.descripcion = descripcion;
         this.precio = precio;
         this.idCat = idCat;
+        this.descuento = descuento;
     }
 
     public String getNombre() {
@@ -57,5 +59,13 @@ public class Comida {
 
     public void setIdCat(String idCat) {
         this.idCat = idCat;
+    }
+
+    public String getDescuento() {
+        return descuento;
+    }
+
+    public void setDescuento(String descuento) {
+        this.descuento = descuento;
     }
 }

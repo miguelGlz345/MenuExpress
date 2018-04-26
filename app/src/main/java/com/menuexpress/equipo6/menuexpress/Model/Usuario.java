@@ -13,8 +13,8 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String nombre, String contraseña) {
-        this.nombre = nombre;
+    public Usuario(String email, String contraseña) {
+        this.email = email;
         this.contraseña = contraseña;
     }
 

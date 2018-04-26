@@ -55,6 +55,21 @@ public class WelcomeActivity extends AppCompatActivity {
         //Inicializar Paper
         Paper.init(this);
 
+        String email = Paper.book().read(Common.EMAIL_KEY);
+        String pass = Paper.book().read(Common.PASS_KEY);
+
+       /* if (email != null && pass != null) {
+            if (!email.isEmpty() && !pass.isEmpty()) {
+                usuarioRecordado(email, pass);
+                bIngreso.setVisibility(View.GONE);
+                bRegistro.setVisibility(View.GONE);
+            } else {
+                firebaseAuth.signOut();
+                bIngreso.setVisibility(View.VISIBLE);
+                bRegistro.setVisibility(View.VISIBLE);
+            }
+        }*/
+
         bRegistro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,10 +107,15 @@ public class WelcomeActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+       /* if (currentUser != null) {
+          irAInicio();
+        }*/
+
         String email = Paper.book().read(Common.EMAIL_KEY);
         String pass = Paper.book().read(Common.PASS_KEY);
 
-        if (email != null && pass != null) {
+        if (email != null && pass != null && currentUser != null) {
             if (!email.isEmpty() && !pass.isEmpty()) {
                 usuarioRecordado(email, pass);
                 bIngreso.setVisibility(View.GONE);
