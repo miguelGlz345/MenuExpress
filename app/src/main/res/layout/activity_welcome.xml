@@ -37,29 +37,29 @@
         android:weightSum="2">
 
         <info.hoang8f.widget.FButton
-            android:id="@+id/btnRegistroW"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:text="REGÍSTRATE"
-            android:textColor="@android:color/white"
-            app:cornerRadius="5dp"
-            app:fButtonColor="@color/btnSignUp"
-            app:shadowColor="@android:color/black"
-            app:shadowEnabled="true"
-            app:shadowHeight="5dp" />
-
-        <info.hoang8f.widget.FButton
             android:id="@+id/btnIngresarW"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:text="INGRESAR"
+            android:text="Iniciar Sesión"
             android:textColor="@android:color/white"
             app:cornerRadius="5dp"
             app:fButtonColor="@color/btnSingActive"
+            app:shadowColor="@android:color/black"
+            app:shadowEnabled="true"
+            app:shadowHeight="5dp" />
+
+        <info.hoang8f.widget.FButton
+            android:id="@+id/btnRegistroW"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:text="Crear Usuario"
+            android:textColor="@android:color/white"
+            app:cornerRadius="5dp"
+            app:fButtonColor="@color/btnSignUp"
             app:shadowColor="@android:color/black"
             app:shadowEnabled="true"
             app:shadowHeight="5dp" />

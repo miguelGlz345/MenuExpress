@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -69,82 +70,59 @@ public class IngresoActivity extends AppCompatActivity {
         bIngreso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String email = edtEmail.getText().toString();
+                String pass = edtContraseña.getText().toString();
 
-                firebaseAuth.signInWithEmailAndPassword(edtEmail.getText().toString(), edtContraseña.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)) {
 
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
-                        if (task.isSuccessful()) {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            tabla_usuario.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    String user_id = firebaseAuth.getCurrentUser().getUid();
+                            if (task.isSuccessful()) {
 
-                                    //guardar email y contraseña
-                                    if (cbRecordar.isChecked()) {
-                                        Paper.book().write(Common.EMAIL_KEY, user_id);
-                                        Paper.book().write(Common.PASS_KEY, user_id);
+                                tabla_usuario.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        String user_id = firebaseAuth.getCurrentUser().getUid();
+
+                                        //guardar email y contraseña
+                                        if (cbRecordar.isChecked()) {
+                                            Paper.book().write(Common.EMAIL_KEY, user_id);
+                                            Paper.book().write(Common.PASS_KEY, user_id);
+                                        }
+
+                                        //Verificar si el usuario existe
+                                        if (dataSnapshot.child(user_id).exists()) {
+                                            //Obtener la informacion del usuario
+                                            Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
+
+                                            //Se guarda el usuario actual
+                                            Common.currentUser = usuario;
+                                            Intent intent = new Intent(IngresoActivity.this, Inicio.class);
+                                            startActivity(intent);
+                                            finish();
+                                            Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
 
-                                    //Verificar si el usuario existe
-                                    if (dataSnapshot.child(user_id).exists()) {
-                                        //Obtener la informacion del usuario
-                                        Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
-                                        //Se guarda el usuario actual
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                        Intent intent = new Intent(IngresoActivity.this, Inicio.class);
-                                        Common.currentUser = usuario;
-                                        startActivity(intent);
-                                        finish();
-                                        Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
-                                        //irAInicio();
-
-                                    } else {
-                                        Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                                     }
-                                }
+                                });
 
-                                /*if (usuario.getContraseña().equals(edtContraseña.getText().toString())) {
-
-                                                               } else {
-                                                                   Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                                                               }*/
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
-
-                        } else {
-                            Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                /*tabla_usuario.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //Verificar si el usuario existe
-                        if (dataSnapshot.child(edtEmail.getText().toString()).exists()) {
-                            //Obtener la informacion del usuario
-                            Usuario usuario = dataSnapshot.child(edtEmail.getText().toString()).getValue(Usuario.class);
-                            if (usuario.getContraseña().equals(edtContraseña.getText().toString())) {
-                                Toast.makeText(IngresoActivity.this, "Inicio de sesión correcto", Toast.LENGTH_SHORT).show();
-                                irMain();
                             } else {
                                 Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Toast.makeText(IngresoActivity.this, "Usuario no existe", Toast.LENGTH_SHORT).show();
                         }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });*/
+                    });
+                } else {
+                    Toast.makeText(IngresoActivity.this, "Faltan datos que llenar", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -152,7 +130,7 @@ public class IngresoActivity extends AppCompatActivity {
     public void irAInicio() {
         Intent intent = new Intent(IngresoActivity.this, Inicio.class);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     @Override

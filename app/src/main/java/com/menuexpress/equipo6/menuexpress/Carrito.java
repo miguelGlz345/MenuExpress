@@ -17,7 +17,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Model.Pedido;
-import com.menuexpress.equipo6.menuexpress.Model.Solicitud;
+import com.menuexpress.equipo6.menuexpress.Model.Solicitar;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.CarritoAdapter;
 
 import java.text.NumberFormat;
@@ -29,8 +29,8 @@ import info.hoang8f.widget.FButton;
 
 public class Carrito extends AppCompatActivity {
 
-    List<Pedido> carrito = new ArrayList<>();
-    CarritoAdapter adapter;
+    private List<Pedido> carrito = new ArrayList<>();
+    private CarritoAdapter adapter;
     private TextView txtTotalPrecio;
     private FButton btnRealizarPedido;
     private RecyclerView recyclerView;
@@ -84,16 +84,16 @@ public class Carrito extends AppCompatActivity {
         alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Solicitud solicitud = new Solicitud(
-                        Common.currentUser.getCelular(),
+                Solicitar solicitar = new Solicitar(
+                        //Common.currentUser.getCelular(),
                         Common.currentUser.getNombre(),
-                        Common.currentUser.getDireccion(),
+                        Common.currentUser.getEmail(),
                         txtTotalPrecio.getText().toString(),
                         carrito
                 );
 
                 //Eviar a firebase
-                resquest.child(String.valueOf(System.currentTimeMillis())).setValue(solicitud);
+                resquest.child(String.valueOf(System.currentTimeMillis())).setValue(solicitar);
                 new Database(getBaseContext()).elmininarCarrito();
                 Toast.makeText(Carrito.this, "Gracias, orden recibida", Toast.LENGTH_SHORT).show();
                 finish();

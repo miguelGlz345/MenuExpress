@@ -13,9 +13,9 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String email, String contraseña) {
+    public Usuario(String nombre, String email) {
+        this.nombre = nombre;
         this.email = email;
-        this.contraseña = contraseña;
     }
 
     public Usuario(long id, String nombre, String ap_paterno, String ap_materno, String celular, String direccion, String email) {

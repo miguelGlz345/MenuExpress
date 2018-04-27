@@ -34,7 +34,8 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".ListaComida" />
         <activity android:name=".DetallesComida" />
-        <activity android:name=".Carrito"></activity>
+        <activity android:name=".Carrito" />
+        <activity android:name=".PedidoEstado"></activity>
     </application>
 
 </manifest>

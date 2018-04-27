@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,9 +27,9 @@ import com.menuexpress.equipo6.menuexpress.Model.Usuario;
 
 public class RegistroActivity extends AppCompatActivity {
 
-    EditText edtNombre, edtA_pat, edtA_mat, edtTelefono, edtDir, edtCorreo, edtPassword;
+    private static final String TAG = "EmailPassword";
     Button btnRegistrar;
-    CheckBox cbMostrar;
+    EditText edtNombre, edtA_pat, edtA_mat, edtTelefono, edtDir, edtCorreo, edtPassword, edtConfPass;
 
     long maxIdUser;
     String Uid;
@@ -38,6 +38,8 @@ public class RegistroActivity extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference tabla_usuario;
     private FirebaseAuth firebaseAuth;
+    com.rey.material.widget.CheckBox cbMostrar, cbMostrar2;
+    private DatabaseReference campo_email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,19 +47,23 @@ public class RegistroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registro);
 
         edtNombre = (EditText) findViewById(R.id.edtNom);
-        edtA_pat = (EditText) findViewById(R.id.edtA_pat);
-        edtA_mat = (EditText) findViewById(R.id.edtA_mat);
-        edtTelefono = (EditText) findViewById(R.id.edtTelefono);
-        edtDir = (EditText) findViewById(R.id.edtDireccion);
+        //edtA_pat = (EditText) findViewById(R.id.edtA_pat);
+        //edtA_mat = (EditText) findViewById(R.id.edtA_mat);
+        //edtTelefono = (EditText) findViewById(R.id.edtTelefono);
+        //edtDir = (EditText) findViewById(R.id.edtDireccion);
         edtCorreo = (EditText) findViewById(R.id.edtCorreo);
         edtPassword = (EditText) findViewById(R.id.edtPassword);
+        edtConfPass = (EditText) findViewById(R.id.edtConfPass);
         btnRegistrar = (Button) findViewById(R.id.btnRegistroR);
-        cbMostrar = (CheckBox) findViewById(R.id.cbMostrar);
+        cbMostrar = (com.rey.material.widget.CheckBox) findViewById(R.id.cbMostrar);
+        cbMostrar2 = (com.rey.material.widget.CheckBox) findViewById(R.id.cbMostrar2);
 
         //Inicializar Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
         tabla_usuario = firebaseDatabase.getReference("usuario");
+
+
 
        /* tabla_usuario.addChildEventListener(new ChildEventListener() {
             @Override
@@ -93,6 +99,19 @@ public class RegistroActivity extends AppCompatActivity {
             }
         });*/
 
+        cbMostrar2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (!cbMostrar2.isChecked()) {
+                    //mostrar password
+                    edtConfPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                } else {
+                    //ocultar password
+                    edtConfPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                }
+            }
+        });
+
         cbMostrar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -109,54 +128,63 @@ public class RegistroActivity extends AppCompatActivity {
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String nombre = edtNombre.getText().toString();
+                String email = edtCorreo.getText().toString();
+                String pass = edtPassword.getText().toString();
+                String confpass = edtConfPass.getText().toString();
 
-                firebaseAuth.createUserWithEmailAndPassword(edtCorreo.getText().toString(), edtPassword.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            maxId();
-                            String user_id = firebaseAuth.getCurrentUser().getUid();
-                            DatabaseReference currentUserDB = tabla_usuario.child(user_id);
-                            Usuario usuario = new Usuario(
-                                    maxIdUser,
-                                    edtNombre.getText().toString(),
-                                    edtA_pat.getText().toString(),
-                                    edtA_mat.getText().toString(),
-                                    edtTelefono.getText().toString(),
-                                    edtDir.getText().toString(),
-                                    edtCorreo.getText().toString());
-                            currentUserDB.child(user_id).setValue(usuario);
-                            Toast.makeText(RegistroActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
-                        } else {
-                            String errorMessage = task.getException().getMessage();
-                            Toast.makeText(RegistroActivity.this, "Error : " + errorMessage, Toast.LENGTH_LONG).show();
-                        }
+                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(nombre) && !TextUtils.isEmpty(confpass)) {
+
+                    if (pass.equals(confpass)) {
+
+                        firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                if (task.isSuccessful()) {
+                                    tabla_usuario.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            String user_id = firebaseAuth.getCurrentUser().getUid();
+                                            DatabaseReference currentUserDB = tabla_usuario.child(user_id);
+                                            Usuario usuario = new Usuario(
+                                                    edtNombre.getText().toString(),
+                                                    //edtA_pat.getText().toString(),
+                                                    //edtA_mat.getText().toString(),
+                                                    //edtTelefono.getText().toString(),
+                                                    //edtDir.getText().toString(),
+                                                    edtCorreo.getText().toString());
+                                            currentUserDB.setValue(usuario);
+
+                                            irIngreso();
+                                            //irMain();
+                                            Toast.makeText(RegistroActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                } else {//task
+                                    Toast.makeText(RegistroActivity.this, "Usuario ya existe", Toast.LENGTH_SHORT).show();
+                                }
+                            } //OnComplete
+                        });
+                    } else { //equals
+                        Toast.makeText(RegistroActivity.this, "Las contraseñas no son iguales", Toast.LENGTH_SHORT).show();
                     }
-                });
-
-                /*tabla_usuario.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        //Verificar si el usuario existe
-                        if (dataSnapshot.child(edtTelefono.getText().toString()).exists()) {
-                            Toast.makeText(RegistroActivity.this, "Usuario ya existe", Toast.LENGTH_SHORT).show();
-                        } else {
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });*/
+                } else { //!Empty
+                    Toast.makeText(RegistroActivity.this, "Faltan campos que llenar", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
     }
 
 
-    public void maxId() {
+    /*public void maxId() {
         tabla_usuario.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -169,11 +197,17 @@ public class RegistroActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
 
     public void irMain() {
         Intent intent = new Intent(RegistroActivity.this, Inicio.class);
         startActivity(intent);
+    }
+
+    public void irIngreso() {
+        Intent intent = new Intent(RegistroActivity.this, IngresoActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
@@ -181,8 +215,8 @@ public class RegistroActivity extends AppCompatActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser != null) {
-            irMain();
-        }
+        //if (currentUser != null) {
+        //  irMain();
+        //}
     }
 }

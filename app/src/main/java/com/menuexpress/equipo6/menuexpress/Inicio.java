@@ -85,7 +85,8 @@ public class Inicio extends AppCompatActivity
         //Colocar el nombre del usuario
         View headerView = navigationView.getHeaderView(0);
         txtNombreUsuario = (TextView) headerView.findViewById(R.id.textNombre);
-        txtNombreUsuario.setText(Common.currentUser.getNombre() + " " + Common.currentUser.getAp_paterno() + " " + Common.currentUser.getAp_materno());
+        txtNombreUsuario.setText(Common.currentUser.getNombre());
+        //+ " " + Common.currentUser.getAp_paterno() + " " + Common.currentUser.getAp_materno());
 
         //cargar menu
         recycler_menu = (RecyclerView) findViewById(R.id.reclycler_menu);
@@ -176,11 +177,14 @@ public class Inicio extends AppCompatActivity
         if (id == R.id.nav_menu) {
             // Handle the camera action
         } else if (id == R.id.nav_carro) {
+            Intent cintent = new Intent(Inicio.this, Carrito.class);
+            startActivity(cintent);
 
         } else if (id == R.id.nav_pedido) {
+            Intent pintent = new Intent(Inicio.this, PedidoEstado.class);
+            startActivity(pintent);
 
         } else if (id == R.id.nav_salir) {
-
             Paper.book().destroy();
             firebaseAuth.signOut();
             irAWelcome();
@@ -214,7 +218,8 @@ public class Inicio extends AppCompatActivity
 
     public void irAWelcome() {
         Intent intent = new Intent(Inicio.this, WelcomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-        finish();
+
     }
 }

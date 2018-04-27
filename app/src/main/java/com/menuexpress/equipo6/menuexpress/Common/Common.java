@@ -8,5 +8,4 @@ public class Common {
     public static final String PASS_KEY = "contraseña";
     public static Usuario currentUser;
 
-
 }

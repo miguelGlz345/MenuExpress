@@ -7,6 +7,9 @@ public class Pedido {
     private String precio;
     private String descuento;
 
+    public Pedido() {
+    }
+
     public Pedido(String idComida, String nombreComida, String cantidad, String precio, String descuento) {
         this.idComida = idComida;
         this.nombreComida = nombreComida;
