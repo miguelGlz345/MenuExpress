@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -18,6 +19,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Comida;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.ComidaViewHolder;
@@ -27,6 +29,7 @@ public class ListaComida extends AppCompatActivity {
 
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseRecyclerAdapter<Comida, ComidaViewHolder> adapter;
+    private FirebaseRecyclerAdapter<Comida, ComidaViewHolder> searchAdapter;
     private TextView txtNombre;
     private RecyclerView recycler_comida;
     private FirebaseAuth firebaseAuth;
@@ -53,7 +56,12 @@ public class ListaComida extends AppCompatActivity {
         if (getIntent() != null)
             categoriaId = getIntent().getStringExtra("categoriaId");
         if (!categoriaId.isEmpty() && categoriaId != null) {
-            cargarListaComida(categoriaId);
+            if (Common.isConnectedToIntenet(getBaseContext())) {
+                cargarListaComida(categoriaId);
+            } else {
+                Toast.makeText(ListaComida.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
 
@@ -69,13 +77,13 @@ public class ListaComida extends AppCompatActivity {
 
         adapter = new FirebaseRecyclerAdapter<Comida, ComidaViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull ComidaViewHolder holder, int position, @NonNull Comida model) {
+            protected void onBindViewHolder(@NonNull ComidaViewHolder holder, int position, @NonNull final Comida model) {
                 holder.nombre_comida.setText(model.getNombre());
                 Picasso.with(ListaComida.this)
                         .load(model.getImagen())
                         .into(holder.imagen_comida);
 
-                final Comida local = model;
+                // final Comida local = model;
 
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
@@ -115,10 +123,51 @@ public class ListaComida extends AppCompatActivity {
         }
     }
 
+    /*private void statrSearch(CharSequence text) {
+
+        Query searchByName = comida.orderByChild("nombre").equalTo(text.toString());
+
+        FirebaseRecyclerOptions<Comida> options = new FirebaseRecyclerOptions.Builder<Comida>()
+                .setQuery(searchByName, Comida.class)
+                .build();
+
+        searchAdapter = new FirebaseRecyclerAdapter<Comida, ComidaViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull ComidaViewHolder holder, int position, @NonNull Comida model) {
+                holder.nombre_comida.setText(model.getNombre());
+                Picasso.with(getBaseContext()).load(model.getImagen())
+                        .into(holder.imagen_comida);
+
+                final Comida local = model;
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        Intent intent = new Intent(ListaComida.this, DetallesComida.class);
+                        intent.putExtra("comidaId", searchAdapter.getRef(position).getKey());
+                        startActivity(intent);
+                    }
+                });
+            }
+
+            @NonNull
+            @Override
+            public ComidaViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.comida_item, parent, false);
+                return new ComidaViewHolder(itemView);
+            }
+        };
+        searchAdapter.startListening();
+
+        searchAdapter.notifyDataSetChanged(); //Actualiza los datos si cambian
+        recycler_comida.setAdapter(searchAdapter);
+    }*/
+
     @Override
     protected void onStop() {
         super.onStop();
         adapter.stopListening();
+        // searchAdapter.stopListening();
     }
 
     public void irAWelcome() {

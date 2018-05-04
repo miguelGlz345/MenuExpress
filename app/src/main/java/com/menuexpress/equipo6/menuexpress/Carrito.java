@@ -6,6 +6,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -60,7 +61,10 @@ public class Carrito extends AppCompatActivity {
         btnRealizarPedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAlertDialog();
+                if (carrito.size() > 0)
+                    showAlertDialog();
+                else
+                    Toast.makeText(Carrito.this, "El carrito está vacio", Toast.LENGTH_SHORT).show();
             }
         });
         cargarListaComida();
@@ -112,6 +116,7 @@ public class Carrito extends AppCompatActivity {
     private void cargarListaComida() {
         carrito = new Database(this).getCarrito();
         adapter = new CarritoAdapter(carrito, this);
+        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
         //Calcular el precio total
@@ -121,5 +126,21 @@ public class Carrito extends AppCompatActivity {
         Locale locale = new Locale("es", "MX");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
         txtTotalPrecio.setText(fmt.format(total));
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getTitle().equals(Common.DELETE)) {
+            deleteCarrito(item.getOrder());
+        }
+        return true;
+    }
+
+    private void deleteCarrito(int position) {
+        carrito.remove(position);
+        new Database(this).elmininarCarrito();
+        for (Pedido item : carrito)
+            new Database(this).agregarCarrito(item);
+        cargarListaComida();
     }
 }

@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Model.Usuario;
 
 public class RegistroActivity extends AppCompatActivity {
@@ -132,52 +133,60 @@ public class RegistroActivity extends AppCompatActivity {
                 String email = edtCorreo.getText().toString();
                 String pass = edtPassword.getText().toString();
                 String confpass = edtConfPass.getText().toString();
+                if (Common.isConnectedToIntenet(getBaseContext())) {
 
-                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(nombre) && !TextUtils.isEmpty(confpass)) {
+                    if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(nombre) && !TextUtils.isEmpty(confpass)) {
 
-                    if (pass.equals(confpass)) {
+                        if (pass.equals(confpass)) {
 
-                        firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
+                            firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                if (task.isSuccessful()) {
-                                    tabla_usuario.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (task.isSuccessful()) {
+                                        tabla_usuario.addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                            String user_id = firebaseAuth.getCurrentUser().getUid();
-                                            DatabaseReference currentUserDB = tabla_usuario.child(user_id);
-                                            Usuario usuario = new Usuario(
-                                                    edtNombre.getText().toString(),
-                                                    //edtA_pat.getText().toString(),
-                                                    //edtA_mat.getText().toString(),
-                                                    //edtTelefono.getText().toString(),
-                                                    //edtDir.getText().toString(),
-                                                    edtCorreo.getText().toString());
-                                            currentUserDB.setValue(usuario);
+                                                //Registrar usuario
+                                                String user_id = firebaseAuth.getCurrentUser().getUid();
+                                                DatabaseReference currentUserDB = tabla_usuario.child(user_id);
+                                                Usuario usuario = new Usuario(
+                                                        edtNombre.getText().toString(),
+                                                        //edtA_pat.getText().toString(),
+                                                        //edtA_mat.getText().toString(),
+                                                        //edtTelefono.getText().toString(),
+                                                        //edtDir.getText().toString(),
+                                                        edtCorreo.getText().toString());
+                                                currentUserDB.setValue(usuario);
 
-                                            irIngreso();
-                                            //irMain();
-                                            Toast.makeText(RegistroActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
-                                        }
+                                                irIngreso();
+                                                //irMain();
+                                                Toast.makeText(RegistroActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
+                                            }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
 
-                                        }
-                                    });
-                                } else {//task
-                                    Toast.makeText(RegistroActivity.this, "Usuario ya existe", Toast.LENGTH_SHORT).show();
-                                }
-                            } //OnComplete
-                        });
-                    } else { //equals
-                        Toast.makeText(RegistroActivity.this, "Las contraseñas no son iguales", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    } else {//task
+                                        Toast.makeText(RegistroActivity.this, "Usuario ya existe", Toast.LENGTH_SHORT).show();
+                                    }
+                                } //OnComplete
+                            });
+                        } else { //equals
+                            Toast.makeText(RegistroActivity.this, "Las contraseñas no son iguales", Toast.LENGTH_SHORT).show();
+                        }
+                    } else { //!Empty
+                        Toast.makeText(RegistroActivity.this, "Faltan campos que llenar", Toast.LENGTH_SHORT).show();
                     }
-                } else { //!Empty
-                    Toast.makeText(RegistroActivity.this, "Faltan campos que llenar", Toast.LENGTH_SHORT).show();
+
+                } else {//Conectado a internet
+                    Toast.makeText(RegistroActivity.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
             }
         });
 

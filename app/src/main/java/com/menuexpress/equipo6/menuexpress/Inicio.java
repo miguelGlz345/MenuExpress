@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -94,8 +95,21 @@ public class Inicio extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-        cargarMenu();
+        if (Common.isConnectedToIntenet(this)) {
+            cargarMenu();
+        } else {
+            Toast.makeText(Inicio.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
+
+    /*private  void updateToken(String token){
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token (token, false);
+        tokens.child(Common.currentUser.getEmail().setValue(data));
+    }*/
+
 
     private void cargarMenu() {
         FirebaseRecyclerOptions<Categoria> options = new FirebaseRecyclerOptions.Builder<Categoria>()
@@ -161,8 +175,8 @@ public class Inicio extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (item.getItemId() == R.id.Actualizar) {
+            cargarMenu();
         }
 
         return super.onOptionsItemSelected(item);

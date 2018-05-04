@@ -88,13 +88,13 @@ public class WelcomeActivity extends AppCompatActivity {
     public void iniciarSesion() {
         Intent intent = new Intent(WelcomeActivity.this, IngresoActivity.class);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     public void Registro() {
         Intent intent = new Intent(WelcomeActivity.this, RegistroActivity.class);
         startActivity(intent);
-        finish();
+        //finish();
     }
 
     private void irAInicio() {

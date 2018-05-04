@@ -14,6 +14,7 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Model.Solicitar;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.PedidoViewHolder;
@@ -46,15 +47,23 @@ public class PedidoEstado extends AppCompatActivity {
     }
 
     private void cargarPedidos(String email) {
+
+        Query pedidobyUser = resquest.orderByChild("email").equalTo(email);
+
         FirebaseRecyclerOptions<Solicitar> options = new FirebaseRecyclerOptions.Builder<Solicitar>()
-                .setQuery(resquest.orderByChild("email"), Solicitar.class)
+                .setQuery(pedidobyUser, Solicitar.class)
                 .build();
+
+
+        // FirebaseRecyclerOptions<Solicitar> options = new FirebaseRecyclerOptions.Builder<Solicitar>()
+        //       .setQuery(resquest.orderByChild("email"), Solicitar.class)
+        //     .build();
 
         adapter = new FirebaseRecyclerAdapter<Solicitar, PedidoViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull PedidoViewHolder holder, int position, @NonNull Solicitar model) {
                 holder.txtPedidoId.setText(adapter.getRef(position).getKey());
-                holder.txtPedidoEstado.setText(convertirCodigoEstado(model.getEstado()));
+                holder.txtPedidoEstado.setText(Common.convertirCodigoEstado(model.getEstado()));
                 holder.txtPedidoUsuario.setText(model.getNombre());
             }
 
@@ -71,15 +80,6 @@ public class PedidoEstado extends AppCompatActivity {
         adapter.notifyDataSetChanged(); //Actualiza los datos si cambian
         recyclerView.setAdapter(adapter);
 
-    }
-
-    private String convertirCodigoEstado(String estado) {
-        if (estado.equals("0"))
-            return "colocado";
-        else if (estado.equals("1"))
-            return "en camino";
-        else
-            return "enviado";
     }
 
     @Override

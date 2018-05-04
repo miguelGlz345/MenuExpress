@@ -16,6 +16,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Model.Comida;
 import com.menuexpress.equipo6.menuexpress.Model.Pedido;
@@ -78,7 +79,12 @@ public class DetallesComida extends AppCompatActivity {
         if (getIntent() != null)
             comidaId = getIntent().getStringExtra("comidaId");
         if (!comidaId.isEmpty()) {
-            getDetalleComida(comidaId);
+            if (Common.isConnectedToIntenet(getBaseContext())) {
+                getDetalleComida(comidaId);
+            } else {
+                Toast.makeText(DetallesComida.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
     }

@@ -1,5 +1,9 @@
 package com.menuexpress.equipo6.menuexpress.Common;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.menuexpress.equipo6.menuexpress.Model.Usuario;
 
 public class Common {
@@ -7,5 +11,31 @@ public class Common {
     public static final String EMAIL_KEY = "email";
     public static final String PASS_KEY = "contraseña";
     public static Usuario currentUser;
+    public static final String DELETE = "Borrar";
+
+    public static String convertirCodigoEstado(String estado) {
+        if (estado.equals("0"))
+            return "colocado";
+        else if (estado.equals("1"))
+            return "en camino";
+        else
+            return "enviado";
+    }
+
+    //Checar si está conectado a internet
+    public static boolean isConnectedToIntenet(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        if (connectivityManager != null) {
+            NetworkInfo[] info = connectivityManager.getAllNetworkInfo();
+            if (info != null) {
+                for (int i = 0; i < info.length; i++) {
+                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }

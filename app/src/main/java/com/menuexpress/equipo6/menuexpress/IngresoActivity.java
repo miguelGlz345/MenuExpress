@@ -73,55 +73,61 @@ public class IngresoActivity extends AppCompatActivity {
                 String email = edtEmail.getText().toString();
                 String pass = edtContraseña.getText().toString();
 
-                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)) {
+                if (Common.isConnectedToIntenet(getBaseContext())) {
 
-                    firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)) {
 
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                        firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
-                            if (task.isSuccessful()) {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                tabla_usuario.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        String user_id = firebaseAuth.getCurrentUser().getUid();
+                                if (task.isSuccessful()) {
 
-                                        //guardar email y contraseña
-                                        if (cbRecordar.isChecked()) {
-                                            Paper.book().write(Common.EMAIL_KEY, user_id);
-                                            Paper.book().write(Common.PASS_KEY, user_id);
+                                    tabla_usuario.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            String user_id = firebaseAuth.getCurrentUser().getUid();
+
+                                            //guardar email y contraseña
+                                            if (cbRecordar.isChecked()) {
+                                                Paper.book().write(Common.EMAIL_KEY, user_id);
+                                                Paper.book().write(Common.PASS_KEY, user_id);
+                                            }
+
+                                            //Verificar si el usuario existe
+                                            if (dataSnapshot.child(user_id).exists()) {
+                                                //Obtener la informacion del usuario
+                                                Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
+
+                                                //Se guarda el usuario actual
+                                                Common.currentUser = usuario;
+                                                Intent intent = new Intent(IngresoActivity.this, Inicio.class);
+                                                startActivity(intent);
+                                                finish();
+                                                Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
 
-                                        //Verificar si el usuario existe
-                                        if (dataSnapshot.child(user_id).exists()) {
-                                            //Obtener la informacion del usuario
-                                            Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
 
-                                            //Se guarda el usuario actual
-                                            Common.currentUser = usuario;
-                                            Intent intent = new Intent(IngresoActivity.this, Inicio.class);
-                                            startActivity(intent);
-                                            finish();
-                                            Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                                         }
-                                    }
+                                    });
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
-                                });
-
-                            } else {
-                                Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        Toast.makeText(IngresoActivity.this, "Faltan datos que llenar", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(IngresoActivity.this, "Faltan datos que llenar", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(IngresoActivity.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
+                    return;
                 }
             }
         });

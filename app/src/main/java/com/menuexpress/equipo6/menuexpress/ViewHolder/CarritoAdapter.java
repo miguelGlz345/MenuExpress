@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amulyakhare.textdrawable.TextDrawable;
+import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Pedido;
 import com.menuexpress.equipo6.menuexpress.R;
@@ -20,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-class CarritoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+class CarritoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
     public TextView txt_carrito_nombre, txt_carrito_precio;
     public ImageView img_carrito_cant;
@@ -32,6 +34,8 @@ class CarritoViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         txt_carrito_nombre = (TextView) itemView.findViewById(R.id.carrito_item_nombre);
         txt_carrito_precio = (TextView) itemView.findViewById(R.id.carrito_item_precio);
         img_carrito_cant = (ImageView) itemView.findViewById(R.id.carrito_item_cant);
+
+        itemView.setOnCreateContextMenuListener(this);
     }
 
     public void setTxt_carrito_nombre(TextView txt_carrito_nombre) {
@@ -41,6 +45,12 @@ class CarritoViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     @Override
     public void onClick(View v) {
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Seleccionar Opcion");
+        menu.add(0, 0, getAdapterPosition(), Common.DELETE);
     }
 }
 
