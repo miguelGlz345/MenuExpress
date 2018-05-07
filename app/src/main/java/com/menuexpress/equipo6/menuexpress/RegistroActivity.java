@@ -64,42 +64,6 @@ public class RegistroActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         tabla_usuario = firebaseDatabase.getReference("usuario");
 
-
-
-       /* tabla_usuario.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                try {
-                    while (dataSnapshot.child(Uid).getValue(Queue.class).equals("usuario")) {
-                        checkUser = "1";
-                        break;
-                    }
-                } catch (Exception e) {
-                    checkUser = "0";
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
-
         cbMostrar2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -129,84 +93,72 @@ public class RegistroActivity extends AppCompatActivity {
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String nombre = edtNombre.getText().toString();
-                String email = edtCorreo.getText().toString();
-                String pass = edtPassword.getText().toString();
-                String confpass = edtConfPass.getText().toString();
-                if (Common.isConnectedToIntenet(getBaseContext())) {
 
-                    if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(nombre) && !TextUtils.isEmpty(confpass)) {
-
-                        if (pass.equals(confpass)) {
-
-                            firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                    if (task.isSuccessful()) {
-                                        tabla_usuario.addValueEventListener(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                                //Registrar usuario
-                                                String user_id = firebaseAuth.getCurrentUser().getUid();
-                                                DatabaseReference currentUserDB = tabla_usuario.child(user_id);
-                                                Usuario usuario = new Usuario(
-                                                        edtNombre.getText().toString(),
-                                                        //edtA_pat.getText().toString(),
-                                                        //edtA_mat.getText().toString(),
-                                                        //edtTelefono.getText().toString(),
-                                                        //edtDir.getText().toString(),
-                                                        edtCorreo.getText().toString());
-                                                currentUserDB.setValue(usuario);
-
-                                                irIngreso();
-                                                //irMain();
-                                                Toast.makeText(RegistroActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-
-                                            }
-                                        });
-                                    } else {//task
-                                        Toast.makeText(RegistroActivity.this, "Usuario ya existe", Toast.LENGTH_SHORT).show();
-                                    }
-                                } //OnComplete
-                            });
-                        } else { //equals
-                            Toast.makeText(RegistroActivity.this, "Las contraseñas no son iguales", Toast.LENGTH_SHORT).show();
-                        }
-                    } else { //!Empty
-                        Toast.makeText(RegistroActivity.this, "Faltan campos que llenar", Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {//Conectado a internet
-                    Toast.makeText(RegistroActivity.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
+                resgistrarUsuario();
             }
         });
 
     }
 
+    private void resgistrarUsuario() {
+        String nombre = edtNombre.getText().toString();
+        String email = edtCorreo.getText().toString();
+        String pass = edtPassword.getText().toString();
+        String confpass = edtConfPass.getText().toString();
+        if (Common.isConnectedToInternet(getBaseContext())) {
 
-    /*public void maxId() {
-        tabla_usuario.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                maxIdUser = dataSnapshot.getChildrenCount() + 1;
+            if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(nombre) && !TextUtils.isEmpty(confpass)) {
+
+                if (pass.equals(confpass)) {
+
+                    firebaseAuth.createUserWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            if (task.isSuccessful()) {
+                                tabla_usuario.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                        //Registrar usuario
+                                        String user_id = firebaseAuth.getCurrentUser().getUid();
+                                        DatabaseReference currentUserDB = tabla_usuario.child(user_id);
+                                        Usuario usuario = new Usuario(
+                                                edtNombre.getText().toString(),
+                                                //edtA_pat.getText().toString(),
+                                                //edtA_mat.getText().toString(),
+                                                //edtTelefono.getText().toString(),
+                                                //edtDir.getText().toString(),
+                                                edtCorreo.getText().toString());
+                                        currentUserDB.setValue(usuario);
+
+                                        irIngreso();
+                                        //irMain();
+                                        Toast.makeText(RegistroActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            } else {//task
+                                Toast.makeText(RegistroActivity.this, "Usuario ya existe", Toast.LENGTH_SHORT).show();
+                            }
+                        } //OnComplete
+                    });
+                } else { //equals
+                    Toast.makeText(RegistroActivity.this, "Las contraseñas no son iguales", Toast.LENGTH_SHORT).show();
+                }
+            } else { //!Empty
+                Toast.makeText(RegistroActivity.this, "Faltan campos que llenar", Toast.LENGTH_SHORT).show();
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }*/
+        } else {//Conectado a internet
+            Toast.makeText(RegistroActivity.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
+    }
 
     public void irMain() {
         Intent intent = new Intent(RegistroActivity.this, Inicio.class);

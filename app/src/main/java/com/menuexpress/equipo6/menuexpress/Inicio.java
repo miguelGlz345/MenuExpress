@@ -99,7 +99,7 @@ public class Inicio extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-        if (Common.isConnectedToIntenet(this)) {
+        if (Common.isConnectedToInternet(this)) {
             cargarMenu();
         } else {
             Toast.makeText(Inicio.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
@@ -244,7 +244,7 @@ public class Inicio extends AppCompatActivity
     }
 
     public void irAWelcome() {
-        Intent intent = new Intent(Inicio.this, WelcomeActivity.class);
+        Intent intent = new Intent(Inicio.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
 

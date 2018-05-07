@@ -25,7 +25,7 @@ public class Common {
     }
 
     //Checar si está conectado a internet
-    public static boolean isConnectedToIntenet(Context context) {
+    public static boolean isConnectedToInternet(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         if (connectivityManager != null) {

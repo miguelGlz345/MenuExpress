@@ -64,7 +64,7 @@ public class Database extends SQLiteAssetHelper {
     public int getContCarrito() {
         int cont = 0;
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("SELECT COUNT(*) detallePedido");
+        String query = String.format("SELECT COUNT(*) FROM detallePedido");
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {

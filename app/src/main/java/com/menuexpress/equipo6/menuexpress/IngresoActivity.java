@@ -70,67 +70,73 @@ public class IngresoActivity extends AppCompatActivity {
         bIngreso.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = edtEmail.getText().toString();
-                String pass = edtContraseña.getText().toString();
-
-                if (Common.isConnectedToIntenet(getBaseContext())) {
-
-                    if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)) {
-
-                        firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                if (task.isSuccessful()) {
-
-                                    tabla_usuario.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot dataSnapshot) {
-                                            String user_id = firebaseAuth.getCurrentUser().getUid();
-
-                                            //guardar email y contraseña
-                                            if (cbRecordar.isChecked()) {
-                                                Paper.book().write(Common.EMAIL_KEY, user_id);
-                                                Paper.book().write(Common.PASS_KEY, user_id);
-                                            }
-
-                                            //Verificar si el usuario existe
-                                            if (dataSnapshot.child(user_id).exists()) {
-                                                //Obtener la informacion del usuario
-                                                Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
-
-                                                //Se guarda el usuario actual
-                                                Common.currentUser = usuario;
-                                                Intent intent = new Intent(IngresoActivity.this, Inicio.class);
-                                                startActivity(intent);
-                                                finish();
-                                                Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-
-                                        }
-                                    });
-
-                                } else {
-                                    Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    } else {
-                        Toast.makeText(IngresoActivity.this, "Faltan datos que llenar", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(IngresoActivity.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                //if (Common.currentUser.getAdmin() == true){
+                ingresoUsuario();
+                // }
             }
         });
+    }
+
+    private void ingresoUsuario() {
+        String email = edtEmail.getText().toString();
+        String pass = edtContraseña.getText().toString();
+
+        if (Common.isConnectedToInternet(getBaseContext())) {
+
+            if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)) {
+
+                firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                        if (task.isSuccessful()) {
+
+                            tabla_usuario.addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    String user_id = firebaseAuth.getCurrentUser().getUid();
+
+                                    //guardar email y contraseña
+                                    if (cbRecordar.isChecked()) {
+                                        Paper.book().write(Common.EMAIL_KEY, user_id);
+                                        Paper.book().write(Common.PASS_KEY, user_id);
+                                    }
+
+                                    //Verificar si el usuario existe
+                                    if (dataSnapshot.child(user_id).exists()) {
+                                        //Obtener la informacion del usuario
+                                        Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
+
+                                        //Se guarda el usuario actual
+                                        Common.currentUser = usuario;
+                                        Intent intent = new Intent(IngresoActivity.this, Inicio.class);
+                                        startActivity(intent);
+                                        finish();
+                                        Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+
+                        } else {
+                            Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            } else {
+                Toast.makeText(IngresoActivity.this, "Faltan datos que llenar", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(IngresoActivity.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
+            return;
+        }
     }
 
     public void irAInicio() {

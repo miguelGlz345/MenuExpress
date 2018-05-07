@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.PedidoDetalleAdapter;
 
-public class DetallePedido extends AppCompatActivity {
+public class DetallesPedido extends AppCompatActivity {
 
     TextView det_pedido_id, det_pedido_usuario, det_pedido_total;
     String pedido_id = "";
@@ -19,7 +19,7 @@ public class DetallePedido extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detalle_pedido);
+        setContentView(R.layout.activity_detalles_pedido);
 
         det_pedido_id = (TextView) findViewById(R.id.det_pedido_id);
         det_pedido_usuario = (TextView) findViewById(R.id.det_pedido_usuario);

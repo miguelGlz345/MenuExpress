@@ -79,7 +79,7 @@ public class DetallesComida extends AppCompatActivity {
         if (getIntent() != null)
             comidaId = getIntent().getStringExtra("comidaId");
         if (!comidaId.isEmpty()) {
-            if (Common.isConnectedToIntenet(getBaseContext())) {
+            if (Common.isConnectedToInternet(getBaseContext())) {
                 getDetalleComida(comidaId);
             } else {
                 Toast.makeText(DetallesComida.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();

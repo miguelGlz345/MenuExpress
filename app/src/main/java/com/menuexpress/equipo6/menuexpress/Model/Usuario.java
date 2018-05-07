@@ -9,6 +9,7 @@ public class Usuario {
     private String email;
     private String contraseña;
     private String direccion;
+    private Boolean isAdmin;
 
     public Usuario() {
     }
@@ -26,6 +27,7 @@ public class Usuario {
         this.celular = celular;
         this.direccion = direccion;
         this.email = email;
+        this.isAdmin = false;
     }
 
     public long getId() {
@@ -90,5 +92,13 @@ public class Usuario {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public Boolean getAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(Boolean admin) {
+        isAdmin = admin;
     }
 }

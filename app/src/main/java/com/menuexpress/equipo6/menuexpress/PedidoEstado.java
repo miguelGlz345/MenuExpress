@@ -66,7 +66,7 @@ public class PedidoEstado extends AppCompatActivity {
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
-                        Intent intent = new Intent(PedidoEstado.this, DetallePedido.class);
+                        Intent intent = new Intent(PedidoEstado.this, DetallesPedido.class);
                         Common.currentResquest = model;
                         intent.putExtra("pedidoId", adapter.getRef(position).getKey());
                         startActivity(intent);

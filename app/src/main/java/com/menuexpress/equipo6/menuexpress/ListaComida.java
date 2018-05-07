@@ -67,7 +67,7 @@ public class ListaComida extends AppCompatActivity {
         if (getIntent() != null)
             categoriaId = getIntent().getStringExtra("categoriaId");
         if (!categoriaId.isEmpty() && categoriaId != null) {
-            if (Common.isConnectedToIntenet(getBaseContext())) {
+            if (Common.isConnectedToInternet(getBaseContext())) {
                 cargarListaComida(categoriaId);
             } else {
                 Toast.makeText(ListaComida.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
@@ -252,7 +252,7 @@ public class ListaComida extends AppCompatActivity {
     }
 
     public void irAWelcome() {
-        Intent intent = new Intent(ListaComida.this, WelcomeActivity.class);
+        Intent intent = new Intent(ListaComida.this, MainActivity.class);
         startActivity(intent);
         finish();
     }
