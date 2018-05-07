@@ -24,7 +24,7 @@ public class Database extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelet = {"idComida", "nombreComida", "cantidad", "precio", "descuento"};
+        String[] sqlSelet = {"id, idComida", "nombreComida", "cantidad", "precio", "descuento", "imagen"};
         String sqlTable = "detallePedido";
         qb.setTables(sqlTable);
         Cursor c = qb.query(db, sqlSelet, null, null, null, null, null);
@@ -32,11 +32,14 @@ public class Database extends SQLiteAssetHelper {
         final List<Pedido> result = new ArrayList<>();
         if (c.moveToFirst()) {
             do {
-                result.add(new Pedido(c.getString(c.getColumnIndex("idComida")),
+                result.add(new Pedido(
+                        c.getInt(c.getColumnIndex("id")),
+                        c.getString(c.getColumnIndex("idComida")),
                         c.getString(c.getColumnIndex("nombreComida")),
                         c.getString(c.getColumnIndex("cantidad")),
                         c.getString(c.getColumnIndex("precio")),
-                        c.getString(c.getColumnIndex("descuento"))
+                        c.getString(c.getColumnIndex("descuento")),
+                        c.getString(c.getColumnIndex("imagen"))
                 ));
             } while (c.moveToNext());
         }
@@ -45,12 +48,13 @@ public class Database extends SQLiteAssetHelper {
 
     public void agregarCarrito(Pedido pedido) {
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("INSERT INTO detallePedido(idComida, nombreComida, cantidad, precio, descuento) VALUES ('%s', '%s', '%s', '%s', '%s');",
+        String query = String.format("INSERT INTO detallePedido(idComida, nombreComida, cantidad, precio, descuento, imagen) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');",
                 pedido.getIdComida(),
                 pedido.getNombreComida(),
                 pedido.getCantidad(),
                 pedido.getPrecio(),
-                pedido.getDescuento());
+                pedido.getDescuento(),
+                pedido.getImagen());
         db.execSQL(query);
     }
 
@@ -72,5 +76,11 @@ public class Database extends SQLiteAssetHelper {
             } while (cursor.moveToNext());
         }
         return cont;
+    }
+
+    public void actualizarDatabase(Pedido pedido) {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("UPDATE detallePedido SET cantidad = %s WHERE id = %d", pedido.getCantidad(), pedido.getId());
+        db.execSQL(query);
     }
 }

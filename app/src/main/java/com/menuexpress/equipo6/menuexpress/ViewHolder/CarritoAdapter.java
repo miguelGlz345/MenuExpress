@@ -1,7 +1,5 @@
 package com.menuexpress.equipo6.menuexpress.ViewHolder;
 
-import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
@@ -11,11 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amulyakhare.textdrawable.TextDrawable;
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.menuexpress.equipo6.menuexpress.Carrito;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
+import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Pedido;
 import com.menuexpress.equipo6.menuexpress.R;
+import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -25,7 +26,8 @@ import java.util.Locale;
 class CarritoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
     public TextView txt_carrito_nombre, txt_carrito_precio;
-    public ImageView img_carrito_cant;
+    public ElegantNumberButton btn_cant_carro;
+    public ImageView img_carrito;
 
     private ItemClickListener itemClickListener;
 
@@ -33,7 +35,8 @@ class CarritoViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
         super(itemView);
         txt_carrito_nombre = (TextView) itemView.findViewById(R.id.carrito_item_nombre);
         txt_carrito_precio = (TextView) itemView.findViewById(R.id.carrito_item_precio);
-        img_carrito_cant = (ImageView) itemView.findViewById(R.id.carrito_item_cant);
+        btn_cant_carro = (ElegantNumberButton) itemView.findViewById(R.id.btn_cant_carro);
+        img_carrito = (ImageView) itemView.findViewById(R.id.img_carrito);
 
         itemView.setOnCreateContextMenuListener(this);
     }
@@ -56,31 +59,54 @@ class CarritoViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
 public class CarritoAdapter extends RecyclerView.Adapter<CarritoViewHolder> {
     private List<Pedido> listData = new ArrayList<>();
-    private Context context;
+    private Carrito carrito;
 
-    public CarritoAdapter(List<Pedido> listData, Context context) {
+    public CarritoAdapter(List<Pedido> listData, Carrito carrito) {
         this.listData = listData;
-        this.context = context;
+        this.carrito = carrito;
     }
 
     @NonNull
     @Override
     public CarritoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
+        LayoutInflater inflater = LayoutInflater.from(carrito);
         View itemView = inflater.inflate(R.layout.carrito_layout, parent, false);
         return new CarritoViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CarritoViewHolder holder, int position) {
-        TextDrawable drawable = TextDrawable.builder()
-                .buildRound("" + listData.get(position).getCantidad(), Color.RED);
-        holder.img_carrito_cant.setImageDrawable(drawable);
+    public void onBindViewHolder(@NonNull final CarritoViewHolder holder, final int position) {
 
-        Locale locale = new Locale("es", "MX");
-        NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-        int precio = (Integer.parseInt(listData.get(position).getPrecio())) * (Integer.parseInt(listData.get(position).getCantidad()));
-        holder.txt_carrito_precio.setText(fmt.format(precio));
+        Picasso.with(carrito.getBaseContext())
+                .load(listData.get(position).getImagen())
+                .resize(70, 70)
+                .centerCrop()
+                .into(holder.img_carrito);
+
+        holder.btn_cant_carro.setNumber(listData.get(position).getCantidad());
+        holder.btn_cant_carro.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
+
+            @Override
+            public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
+                Pedido pedido = listData.get(position);
+                pedido.setCantidad(String.valueOf(newValue));
+                new Database(carrito).actualizarDatabase(pedido);
+
+                //Calcular el precio total
+                int total = 0;
+                List<Pedido> pedidos = new Database(carrito).getCarrito();
+                for (Pedido item : pedidos)
+                    total += (Integer.parseInt(pedido.getPrecio())) * (Integer.parseInt(item.getCantidad()));
+                Locale locale = new Locale("es", "MX");
+                NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
+                carrito.txtTotalPrecio.setText(fmt.format(total));
+
+                int subtotal = (Integer.parseInt(listData.get(position).getPrecio())) * (Integer.parseInt(pedidos.get(position).getCantidad()));
+                holder.txt_carrito_precio.setText(fmt.format(subtotal));
+
+            }
+        });
+
         holder.txt_carrito_nombre.setText(listData.get(position).getNombreComida());
     }
 

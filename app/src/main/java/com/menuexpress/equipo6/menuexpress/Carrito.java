@@ -32,7 +32,7 @@ public class Carrito extends AppCompatActivity {
 
     private List<Pedido> carrito = new ArrayList<>();
     private CarritoAdapter adapter;
-    private TextView txtTotalPrecio;
+    public TextView txtTotalPrecio;
     private FButton btnRealizarPedido;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;

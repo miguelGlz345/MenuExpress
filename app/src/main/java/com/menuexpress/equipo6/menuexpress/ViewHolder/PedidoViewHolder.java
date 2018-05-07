@@ -9,7 +9,7 @@ import com.menuexpress.equipo6.menuexpress.R;
 
 public class PedidoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView txtPedidoId, txtPedidoEstado, txtPedidoUsuario;
+    public TextView txtPedidoId, txtPedidoEstado, txtPedidoUsuario, txtPedidoFecha;
 
     private ItemClickListener itemClickListener;
 
@@ -19,6 +19,7 @@ public class PedidoViewHolder extends RecyclerView.ViewHolder implements View.On
         txtPedidoId = (TextView) itemView.findViewById(R.id.pedido_id);
         txtPedidoUsuario = (TextView) itemView.findViewById(R.id.pedido_usuario);
         txtPedidoEstado = (TextView) itemView.findViewById(R.id.pedido_estado);
+        txtPedidoFecha = (TextView) itemView.findViewById(R.id.pedido_fecha);
 
         itemView.setOnClickListener(this);
     }

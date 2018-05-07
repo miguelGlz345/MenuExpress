@@ -59,7 +59,8 @@ public class DetallesComida extends AppCompatActivity {
                         comidaActual.getNombre(),
                         btnNumero.getNumber(),
                         comidaActual.getPrecio(),
-                        comidaActual.getDescuento()
+                        comidaActual.getDescuento(),
+                        comidaActual.getImagen()
 
                 ));
                 Toast.makeText(DetallesComida.this, "Agregado al carrito", Toast.LENGTH_SHORT).show();
