@@ -1,5 +1,6 @@
 package com.menuexpress.equipo6.menuexpress;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
+import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Solicitar;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.PedidoViewHolder;
 
@@ -36,7 +38,7 @@ public class PedidoEstado extends AppCompatActivity {
         //Iniciarlizar firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        resquest = firebaseDatabase.getReference("request");
+        resquest = firebaseDatabase.getReference("solicitud");
 
         recyclerView = (RecyclerView) findViewById(R.id.listaPedidos);
         recyclerView.setHasFixedSize(true);
@@ -54,17 +56,23 @@ public class PedidoEstado extends AppCompatActivity {
                 .setQuery(pedidobyUser, Solicitar.class)
                 .build();
 
-
-        // FirebaseRecyclerOptions<Solicitar> options = new FirebaseRecyclerOptions.Builder<Solicitar>()
-        //       .setQuery(resquest.orderByChild("email"), Solicitar.class)
-        //     .build();
-
         adapter = new FirebaseRecyclerAdapter<Solicitar, PedidoViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull PedidoViewHolder holder, int position, @NonNull Solicitar model) {
-                holder.txtPedidoId.setText(adapter.getRef(position).getKey());
-                holder.txtPedidoEstado.setText(Common.convertirCodigoEstado(model.getEstado()));
-                holder.txtPedidoUsuario.setText(model.getNombre());
+            protected void onBindViewHolder(@NonNull PedidoViewHolder holder, int position, @NonNull final Solicitar model) {
+                holder.txtPedidoId.setText(String.format("Clave : %s", adapter.getRef(position).getKey()));
+                holder.txtPedidoUsuario.setText(String.format("A nombre de : %s", model.getNombre()));
+                holder.txtPedidoEstado.setText(String.format("Estado : %s", Common.convertirCodigoEstado(model.getEstado())));
+
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        Intent intent = new Intent(PedidoEstado.this, DetallePedido.class);
+                        Common.currentResquest = model;
+                        intent.putExtra("pedidoId", adapter.getRef(position).getKey());
+                        startActivity(intent);
+                        //finish();
+                    }
+                });
             }
 
             @NonNull
@@ -72,6 +80,8 @@ public class PedidoEstado extends AppCompatActivity {
             public PedidoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 View itemView = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.pedido_layout, parent, false);
+
+
                 return new PedidoViewHolder(itemView);
             }
         };
@@ -80,6 +90,12 @@ public class PedidoEstado extends AppCompatActivity {
         adapter.notifyDataSetChanged(); //Actualiza los datos si cambian
         recyclerView.setAdapter(adapter);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
     }
 
     @Override

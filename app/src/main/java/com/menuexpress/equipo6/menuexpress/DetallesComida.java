@@ -2,13 +2,13 @@ package com.menuexpress.equipo6.menuexpress;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +27,7 @@ public class DetallesComida extends AppCompatActivity {
     private TextView nombre_comida, precio_comida, descrip_comida;
     private ImageView imagen_comida;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private FloatingActionButton btnCarro;
+    private CounterFab btnCarro;
     private ElegantNumberButton btnNumero;
 
     private String comidaId = "";
@@ -49,7 +49,7 @@ public class DetallesComida extends AppCompatActivity {
         comida = firebaseDatabase.getReference("comida");
 
         btnNumero = (ElegantNumberButton) findViewById(R.id.btn_cant);
-        btnCarro = (FloatingActionButton) findViewById(R.id.btn_carro);
+        btnCarro = (CounterFab) findViewById(R.id.btn_carro);
 
         btnCarro.setOnClickListener(new View.OnClickListener() {
             @Override

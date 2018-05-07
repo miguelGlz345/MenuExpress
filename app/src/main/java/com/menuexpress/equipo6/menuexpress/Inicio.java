@@ -3,7 +3,6 @@ package com.menuexpress.equipo6.menuexpress;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andremion.counterfab.CounterFab;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
+import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Categoria;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.MenuViewHolder;
@@ -47,6 +48,7 @@ public class Inicio extends AppCompatActivity
     private DatabaseReference category;
     private DatabaseReference usuario;
     private String userid;
+    private CounterFab fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,7 @@ public class Inicio extends AppCompatActivity
         //Inicializar Paper
         Paper.init(this);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +75,8 @@ public class Inicio extends AppCompatActivity
                 startActivity(intent);
             }
         });
+
+        fab.setCount(new Database(this).getContCarrito());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -222,6 +226,15 @@ public class Inicio extends AppCompatActivity
             irAWelcome();
 
         }
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.setCount(new Database(this).getContCarrito());
+        if (adapter != null)
+            adapter.startListening();
     }
 
     @Override

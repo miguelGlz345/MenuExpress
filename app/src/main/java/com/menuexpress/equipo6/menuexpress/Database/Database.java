@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Database extends SQLiteAssetHelper {
 
-    private static final String DB_NAME = "EatltDB.db";
+    private static final String DB_NAME = "pedidoDB.db";
     private static final int DB_VERSION = 1;
 
     public Database(Context context) {
@@ -59,5 +59,18 @@ public class Database extends SQLiteAssetHelper {
         SQLiteDatabase db = getReadableDatabase();
         String query = String.format("DELETE FROM detallePedido");
         db.execSQL(query);
+    }
+
+    public int getContCarrito() {
+        int cont = 0;
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("SELECT COUNT(*) detallePedido");
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                cont = cursor.getInt(0);
+            } while (cursor.moveToNext());
+        }
+        return cont;
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.menuexpress.equipo6.menuexpress.Model.Solicitar;
 import com.menuexpress.equipo6.menuexpress.Model.Usuario;
 
 public class Common {
@@ -11,6 +12,7 @@ public class Common {
     public static final String EMAIL_KEY = "email";
     public static final String PASS_KEY = "contraseña";
     public static Usuario currentUser;
+    public static Solicitar currentResquest;
     public static final String DELETE = "Borrar";
 
     public static String convertirCodigoEstado(String estado) {

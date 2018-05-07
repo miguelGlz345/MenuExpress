@@ -48,7 +48,7 @@ public class Carrito extends AppCompatActivity {
         //Iniciarlizar firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        resquest = firebaseDatabase.getReference("request");
+        resquest = firebaseDatabase.getReference("solicitud");
 
         recyclerView = (RecyclerView) findViewById(R.id.listaCarrito);
         recyclerView.setHasFixedSize(true);
@@ -85,15 +85,16 @@ public class Carrito extends AppCompatActivity {
         //alertDialog.setView(edtDireccion);
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
 
+        //Si es si, se envia el pedido
         alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Solicitar solicitar = new Solicitar(
-                        //Common.currentUser.getCelular(),
                         Common.currentUser.getNombre(),
                         Common.currentUser.getEmail(),
                         txtTotalPrecio.getText().toString(),
-                        carrito
+                        carrito,
+                        "0"
                 );
 
                 //Eviar a firebase

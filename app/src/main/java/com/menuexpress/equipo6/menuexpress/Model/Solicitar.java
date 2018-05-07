@@ -8,18 +8,18 @@ public class Solicitar {
     private String email;
     private String direccion;
     private String total;
-    private String estado = "0";
+    private String estado;
     private List<Pedido> comidas; //la comida en el pedido
 
     public Solicitar() {
     }
 
-    public Solicitar(String nombre, String email, String total, List<Pedido> comidas) {
+    public Solicitar(String nombre, String email, String total, List<Pedido> comidas, String estado) {
         this.nombre = nombre;
         this.email = email;
         this.total = total;
         this.comidas = comidas;
-        this.estado = "0"; //0=colocado, 1=envío, 2=enviado
+        this.estado = estado; //0=colocado, 1=envío, 2=enviado
     }
 
     public String getTelefono() {

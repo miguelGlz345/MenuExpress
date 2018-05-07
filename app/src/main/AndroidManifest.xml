@@ -35,7 +35,8 @@
         <activity android:name=".ListaComida" />
         <activity android:name=".DetallesComida" />
         <activity android:name=".Carrito" />
-        <activity android:name=".PedidoEstado"></activity>
+        <activity android:name=".PedidoEstado" />
+        <activity android:name=".DetallePedido"></activity>
     </application>
 
 </manifest>
