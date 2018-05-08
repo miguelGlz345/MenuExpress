@@ -46,7 +46,6 @@ public class PedidoDetalleAdapter extends RecyclerView.Adapter<PedidoDetalleView
         holder.nombre.setText(String.format("Nombre : %s", pedido.getNombreComida()));
         holder.cantidad.setText(String.format("Cantidad : %s", pedido.getCantidad()));
         holder.precio.setText(String.format("Precio : %s", pedido.getPrecio()));
-
     }
 
     @Override

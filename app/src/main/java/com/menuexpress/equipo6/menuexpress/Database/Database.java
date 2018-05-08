@@ -20,20 +20,34 @@ public class Database extends SQLiteAssetHelper {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
-    public List<Pedido> getCarrito() {
+    public boolean checarExisteComida(String idComidam, String email) {
+        boolean flag = false;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+        String SQLQuery = String.format("SELECT * FROM detallePedido WHERE email = '%s' AND idComida = '%s'", email, idComidam);
+        cursor = db.rawQuery(SQLQuery, null);
+        if (cursor.getCount() > 0)
+            flag = true;
+        else
+            flag = false;
+        cursor.close();
+        return flag;
+    }
+
+    public List<Pedido> getCarrito(String email) {
         SQLiteDatabase db = getReadableDatabase();
         SQLiteQueryBuilder qb = new SQLiteQueryBuilder();
 
-        String[] sqlSelet = {"id, idComida", "nombreComida", "cantidad", "precio", "descuento", "imagen"};
+        String[] sqlSelet = {"email", "idComida", "nombreComida", "cantidad", "precio", "descuento", "imagen"};
         String sqlTable = "detallePedido";
         qb.setTables(sqlTable);
-        Cursor c = qb.query(db, sqlSelet, null, null, null, null, null);
+        Cursor c = qb.query(db, sqlSelet, "email=?", new String[]{email}, null, null, null);
 
         final List<Pedido> result = new ArrayList<>();
         if (c.moveToFirst()) {
             do {
                 result.add(new Pedido(
-                        c.getInt(c.getColumnIndex("id")),
+                        c.getString(c.getColumnIndex("email")),
                         c.getString(c.getColumnIndex("idComida")),
                         c.getString(c.getColumnIndex("nombreComida")),
                         c.getString(c.getColumnIndex("cantidad")),
@@ -46,9 +60,10 @@ public class Database extends SQLiteAssetHelper {
         return result;
     }
 
-    public void agregarCarrito(Pedido pedido) {
+    public void agregarACarrito(Pedido pedido) {
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("INSERT INTO detallePedido(idComida, nombreComida, cantidad, precio, descuento, imagen) VALUES ('%s', '%s', '%s', '%s', '%s', '%s');",
+        String query = String.format("INSERT OR REPLACE INTO detallePedido(email, idComida, nombreComida, cantidad, precio, descuento, imagen) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s');",
+                pedido.getEmail(),
                 pedido.getIdComida(),
                 pedido.getNombreComida(),
                 pedido.getCantidad(),
@@ -58,17 +73,16 @@ public class Database extends SQLiteAssetHelper {
         db.execSQL(query);
     }
 
-
-    public void elmininarCarrito() {
+    public void limpiarCarrito(String email) {
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("DELETE FROM detallePedido");
+        String query = String.format("DELETE FROM detallePedido WHERE email = '%s'", email);
         db.execSQL(query);
     }
 
-    public int getContCarrito() {
+    public int getContCarrito(String email) {
         int cont = 0;
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("SELECT COUNT(*) FROM detallePedido");
+        String query = String.format("SELECT COUNT(*) FROM detallePedido WHERE email = '%s'", email);
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -78,9 +92,23 @@ public class Database extends SQLiteAssetHelper {
         return cont;
     }
 
-    public void actualizarDatabase(Pedido pedido) {
+    public void actualizarCarrito(Pedido pedido) {
         SQLiteDatabase db = getReadableDatabase();
-        String query = String.format("UPDATE detallePedido SET cantidad = %s WHERE id = %d", pedido.getCantidad(), pedido.getId());
+        String query = String.format("UPDATE detallePedido SET cantidad = '%s' WHERE email = '%s' AND idComida = '%s'", pedido.getCantidad(), pedido.getEmail(), pedido.getIdComida());
         db.execSQL(query);
     }
+
+    public void incrementarCarrito(String email, String idComida) {
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("UPDATE detallePedido SET cantidad = 'cantidad+1 WHERE email = '%s' AND idComida = '%s'", email, idComida);
+        db.execSQL(query);
+    }
+
+    public void removerDelCarrito(String idComida, String email) {
+
+        SQLiteDatabase db = getReadableDatabase();
+        String query = String.format("DELETE FROM detallePedido WHERE email = '%s' AND idComida = '%s'", email, idComida);
+        db.execSQL(query);
+    }
+
 }

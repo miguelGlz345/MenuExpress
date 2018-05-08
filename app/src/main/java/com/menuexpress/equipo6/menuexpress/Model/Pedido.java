@@ -1,7 +1,7 @@
 package com.menuexpress.equipo6.menuexpress.Model;
 
 public class Pedido {
-    private int id;
+    private String email;
     private String idComida;
     private String nombreComida;
     private String cantidad;
@@ -12,7 +12,8 @@ public class Pedido {
     public Pedido() {
     }
 
-    public Pedido(String idComida, String nombreComida, String cantidad, String precio, String descuento, String imagen) {
+    public Pedido(String email, String idComida, String nombreComida, String cantidad, String precio, String descuento, String imagen) {
+        this.email = email;
         this.idComida = idComida;
         this.nombreComida = nombreComida;
         this.cantidad = cantidad;
@@ -21,22 +22,12 @@ public class Pedido {
         this.imagen = imagen;
     }
 
-    public Pedido(int id, String idComida, String nombreComida, String cantidad, String precio, String descuento, String imagen) {
-        this.id = id;
-        this.idComida = idComida;
-        this.nombreComida = nombreComida;
-        this.cantidad = cantidad;
-        this.precio = precio;
-        this.descuento = descuento;
-        this.imagen = imagen;
+    public String getEmail() {
+        return email;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getIdComida() {

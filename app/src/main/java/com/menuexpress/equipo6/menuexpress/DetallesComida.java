@@ -27,7 +27,7 @@ public class DetallesComida extends AppCompatActivity {
     private TextView nombre_comida, precio_comida, descrip_comida;
     private ImageView imagen_comida;
     private CollapsingToolbarLayout collapsingToolbarLayout;
-    private CounterFab btnCarro;
+    private CounterFab btnCarritoDet;
     private ElegantNumberButton btnNumero;
 
     private String comidaId = "";
@@ -49,12 +49,13 @@ public class DetallesComida extends AppCompatActivity {
         comida = firebaseDatabase.getReference("comida");
 
         btnNumero = (ElegantNumberButton) findViewById(R.id.btn_cant);
-        btnCarro = (CounterFab) findViewById(R.id.btn_carro);
+        btnCarritoDet = (CounterFab) findViewById(R.id.btnCarritoDet);
 
-        btnCarro.setOnClickListener(new View.OnClickListener() {
+        btnCarritoDet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Database(getBaseContext()).agregarCarrito(new Pedido(
+                new Database(getBaseContext()).agregarACarrito(new Pedido(
+                        Common.currentUser.getEmail(),
                         comidaId,
                         comidaActual.getNombre(),
                         btnNumero.getNumber(),
@@ -66,6 +67,8 @@ public class DetallesComida extends AppCompatActivity {
                 Toast.makeText(DetallesComida.this, "Agregado al carrito", Toast.LENGTH_SHORT).show();
             }
         });
+
+        btnCarritoDet.setCount(new Database(this).getContCarrito(Common.currentUser.getEmail()));
 
         nombre_comida = (TextView) findViewById(R.id.nombre_comida);
         precio_comida = (TextView) findViewById(R.id.comida_precio);
@@ -113,3 +116,4 @@ public class DetallesComida extends AppCompatActivity {
         });
     }
 }
+

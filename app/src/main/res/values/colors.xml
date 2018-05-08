@@ -8,6 +8,7 @@
     <color name="btnSingActive">#A9d440</color>
     <color name="overlayBrackground">#7f333639</color>
     <color name="overlayActionBar">#0e0d0e</color>
+    <color name="bgDelete">#FA315E</color>
 
     <color name="Morado">#5f1854</color>
     <color name="RosaLeve">#fde3f0</color>

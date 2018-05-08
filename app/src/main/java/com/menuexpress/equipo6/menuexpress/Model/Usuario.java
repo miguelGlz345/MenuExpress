@@ -1,7 +1,6 @@
 package com.menuexpress.equipo6.menuexpress.Model;
 
 public class Usuario {
-    private long id;
     private String nombre;
     private String ap_paterno;
     private String ap_materno;
@@ -9,7 +8,7 @@ public class Usuario {
     private String email;
     private String contraseña;
     private String direccion;
-    private Boolean isAdmin;
+    private String isAdmin;
 
     public Usuario() {
     }
@@ -19,23 +18,14 @@ public class Usuario {
         this.email = email;
     }
 
-    public Usuario(long id, String nombre, String ap_paterno, String ap_materno, String celular, String direccion, String email) {
-        this.id = id;
+    public Usuario(String nombre, String ap_paterno, String ap_materno, String celular, String direccion, String email) {
         this.nombre = nombre;
         this.ap_paterno = ap_paterno;
         this.ap_materno = ap_materno;
         this.celular = celular;
         this.direccion = direccion;
         this.email = email;
-        this.isAdmin = false;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
+        this.isAdmin = "false";
     }
 
     public String getNombre() {
@@ -94,11 +84,11 @@ public class Usuario {
         this.direccion = direccion;
     }
 
-    public Boolean getAdmin() {
+    public String getAdmin() {
         return isAdmin;
     }
 
-    public void setAdmin(Boolean admin) {
+    public void setAdmin(String admin) {
         isAdmin = admin;
     }
 }

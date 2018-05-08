@@ -32,10 +32,6 @@ public class RegistroActivity extends AppCompatActivity {
     Button btnRegistrar;
     EditText edtNombre, edtA_pat, edtA_mat, edtTelefono, edtDir, edtCorreo, edtPassword, edtConfPass;
 
-    long maxIdUser;
-    String Uid;
-    String checkUser = "0";
-
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference tabla_usuario;
     private FirebaseAuth firebaseAuth;

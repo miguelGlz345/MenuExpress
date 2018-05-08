@@ -200,6 +200,13 @@ public class ListaComida extends AppCompatActivity {
                 Picasso.with(getBaseContext()).load(model.getImagen())
                         .into(holder.imagen_comida);
 
+               /* boolean isExists = new Database(getBaseContext()).checarExisteComida(adapter.getRef(position).getKey(), Common.currentUser.getEmail());
+                if (!isExists){
+
+                }else{
+                    new Database(getBaseContext()).incrementarCarrito(Common.currentUser.getEmail(), adapter.getRef(position).getKey());
+                }*/
+
                 final Comida local = model;
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override

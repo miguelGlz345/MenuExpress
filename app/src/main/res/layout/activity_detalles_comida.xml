@@ -42,7 +42,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <com.andremion.counterfab.CounterFab
-        android:id="@+id/btn_carro"
+        android:id="@+id/btnCarritoDet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@android:color/white"

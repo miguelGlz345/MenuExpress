@@ -48,7 +48,7 @@ public class Inicio extends AppCompatActivity
     private DatabaseReference category;
     private DatabaseReference usuario;
     private String userid;
-    private CounterFab fab;
+    private CounterFab counterFabIni;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +67,8 @@ public class Inicio extends AppCompatActivity
         //Inicializar Paper
         Paper.init(this);
 
-        fab = (CounterFab) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        counterFabIni = (CounterFab) findViewById(R.id.counterFabIni);
+        counterFabIni.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Inicio.this, Carrito.class);
@@ -76,7 +76,7 @@ public class Inicio extends AppCompatActivity
             }
         });
 
-        fab.setCount(new Database(this).getContCarrito());
+        counterFabIni.setCount(new Database(this).getContCarrito(Common.currentUser.getEmail()));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -228,11 +228,10 @@ public class Inicio extends AppCompatActivity
         }
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
-        fab.setCount(new Database(this).getContCarrito());
+        counterFabIni.setCount(new Database(this).getContCarrito(Common.currentUser.getEmail()));
         if (adapter != null)
             adapter.startListening();
     }
