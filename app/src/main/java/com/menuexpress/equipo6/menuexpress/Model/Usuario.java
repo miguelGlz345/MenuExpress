@@ -13,9 +13,10 @@ public class Usuario {
     public Usuario() {
     }
 
-    public Usuario(String nombre, String email) {
+    public Usuario(String nombre, String email, String isAdmin) {
         this.nombre = nombre;
         this.email = email;
+        this.isAdmin = isAdmin;
     }
 
     public Usuario(String nombre, String ap_paterno, String ap_materno, String celular, String direccion, String email) {
@@ -25,7 +26,6 @@ public class Usuario {
         this.celular = celular;
         this.direccion = direccion;
         this.email = email;
-        this.isAdmin = "false";
     }
 
     public String getNombre() {
@@ -84,11 +84,13 @@ public class Usuario {
         this.direccion = direccion;
     }
 
-    public String getAdmin() {
+    public String getIsAdmin() {
         return isAdmin;
     }
 
-    public void setAdmin(String admin) {
-        isAdmin = admin;
+    public void setIsAdmin(String isAdmin) {
+        this.isAdmin = isAdmin;
     }
 }
+
+

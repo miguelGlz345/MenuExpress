@@ -1,5 +1,6 @@
 package com.menuexpress.equipo6.menuexpress;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -81,6 +82,10 @@ public class IngresoActivity extends AppCompatActivity {
         String email = edtEmail.getText().toString();
         String pass = edtContraseña.getText().toString();
 
+        final ProgressDialog progressDialog = new ProgressDialog(IngresoActivity.this);
+        progressDialog.setMessage("Iniciano sesión...");
+        progressDialog.show();
+
         if (Common.isConnectedToInternet(getBaseContext())) {
 
             if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass)) {
@@ -89,6 +94,7 @@ public class IngresoActivity extends AppCompatActivity {
 
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
 
                         if (task.isSuccessful()) {
 
@@ -108,12 +114,21 @@ public class IngresoActivity extends AppCompatActivity {
                                         //Obtener la informacion del usuario
                                         Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
 
-                                        //Se guarda el usuario actual
-                                        Common.currentUser = usuario;
-                                        Intent intent = new Intent(IngresoActivity.this, Inicio.class);
-                                        startActivity(intent);
-                                        finish();
-                                        Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
+                                        //Comprobar si es administrador
+                                        if (Boolean.parseBoolean(usuario.getIsAdmin())) {
+                                            //Se guarda el usuario actual
+                                            Common.currentUser = usuario;
+                                            Intent intent = new Intent(IngresoActivity.this, Inicio.class);
+                                            startActivity(intent);
+                                            progressDialog.dismiss();
+                                            finish();
+                                            Toast.makeText(IngresoActivity.this, "Bienvenido administrador", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            progressDialog.dismiss();
+                                            Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
+
+                                        }
+
                                     } else {
                                         Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                                     }
@@ -126,14 +141,17 @@ public class IngresoActivity extends AppCompatActivity {
                             });
 
                         } else {
+                            progressDialog.dismiss();
                             Toast.makeText(IngresoActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             } else {
+                progressDialog.dismiss();
                 Toast.makeText(IngresoActivity.this, "Faltan datos que llenar", Toast.LENGTH_SHORT).show();
             }
         } else {
+            progressDialog.dismiss();
             Toast.makeText(IngresoActivity.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
             return;
         }

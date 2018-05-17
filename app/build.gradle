@@ -53,6 +53,8 @@ dependencies {
     implementation 'com.github.mancj:MaterialSearchBar:0.7.6'
     implementation 'com.github.andremion:counterfab:1.0.1'
 
+    // Required for instrumented tests
+    androidTestImplementation 'com.android.support:support-annotations:27.1.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

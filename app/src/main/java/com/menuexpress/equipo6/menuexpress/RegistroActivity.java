@@ -1,5 +1,6 @@
 package com.menuexpress.equipo6.menuexpress;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -101,6 +102,11 @@ public class RegistroActivity extends AppCompatActivity {
         String email = edtCorreo.getText().toString();
         String pass = edtPassword.getText().toString();
         String confpass = edtConfPass.getText().toString();
+
+        final ProgressDialog progressDialog = new ProgressDialog(RegistroActivity.this);
+        progressDialog.setMessage("Registrando usuario...");
+        progressDialog.show();
+
         if (Common.isConnectedToInternet(getBaseContext())) {
 
             if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(pass) && !TextUtils.isEmpty(nombre) && !TextUtils.isEmpty(confpass)) {
@@ -112,6 +118,7 @@ public class RegistroActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             if (task.isSuccessful()) {
+
                                 tabla_usuario.addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -125,10 +132,12 @@ public class RegistroActivity extends AppCompatActivity {
                                                 //edtA_mat.getText().toString(),
                                                 //edtTelefono.getText().toString(),
                                                 //edtDir.getText().toString(),
-                                                edtCorreo.getText().toString());
+                                                edtCorreo.getText().toString(),
+                                                "false");
                                         currentUserDB.setValue(usuario);
 
                                         irIngreso();
+                                        progressDialog.dismiss();
                                         //irMain();
                                         Toast.makeText(RegistroActivity.this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show();
                                     }
@@ -139,18 +148,22 @@ public class RegistroActivity extends AppCompatActivity {
                                     }
                                 });
                             } else {//task
+                                progressDialog.dismiss();
                                 Toast.makeText(RegistroActivity.this, "Usuario ya existe", Toast.LENGTH_SHORT).show();
                             }
                         } //OnComplete
                     });
                 } else { //equals
+                    progressDialog.dismiss();
                     Toast.makeText(RegistroActivity.this, "Las contraseñas no son iguales", Toast.LENGTH_SHORT).show();
                 }
             } else { //!Empty
+                progressDialog.dismiss();
                 Toast.makeText(RegistroActivity.this, "Faltan campos que llenar", Toast.LENGTH_SHORT).show();
             }
 
         } else {//Conectado a internet
+            progressDialog.dismiss();
             Toast.makeText(RegistroActivity.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
             return;
         }
