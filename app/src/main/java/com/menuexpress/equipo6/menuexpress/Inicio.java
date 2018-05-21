@@ -41,6 +41,7 @@ import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Categoria;
+import com.menuexpress.equipo6.menuexpress.Service.ListenPedido;
 import com.menuexpress.equipo6.menuexpress.Service.ListenPedidoAdmin;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.MenuViewHolder;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -141,6 +142,11 @@ public class Inicio extends AppCompatActivity
             counterFabIni.setImageResource(R.drawable.ic_shopping_cart_black_24dp);
         }
 
+        Intent service = new Intent(Inicio.this, ListenPedido.class);
+        startService(service);
+        Intent serviceAdmin = new Intent(Inicio.this, ListenPedidoAdmin.class);
+        startService(serviceAdmin);
+
         if (Common.isConnectedToInternet(this)) {
             cargarMenu();
         } else {
@@ -148,8 +154,6 @@ public class Inicio extends AppCompatActivity
             return;
         }
 
-        Intent service = new Intent(Inicio.this, ListenPedidoAdmin.class);
-        startService(service);
     }
 
     private void cargarMenu() {

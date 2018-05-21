@@ -52,11 +52,14 @@ public class ListenPedidoAdmin extends Service implements ChildEventListener {
 
     @Override
     public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        Solicitar solicitud = dataSnapshot.getValue(Solicitar.class);
-        showNotificacion(dataSnapshot.getKey(), solicitud);
+        if (!Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
+            Solicitar solicitud = dataSnapshot.getValue(Solicitar.class);
+            mostrarNotificacion(dataSnapshot.getKey(), solicitud);
+        }
+
     }
 
-    private void showNotificacion(String key, Solicitar solicitud) {
+    private void mostrarNotificacion(String key, Solicitar solicitud) {
         Intent intent = new Intent(getBaseContext(), PedidoEstado.class);
         intent.putExtra("email", solicitud.getEmail());
         PendingIntent contentIntent = PendingIntent.getActivity(getBaseContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
