@@ -41,6 +41,7 @@ import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Categoria;
+import com.menuexpress.equipo6.menuexpress.Service.ListenPedidoAdmin;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.MenuViewHolder;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
@@ -146,6 +147,9 @@ public class Inicio extends AppCompatActivity
             Toast.makeText(Inicio.this, "Revisa tu conexión a internet", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        Intent service = new Intent(Inicio.this, ListenPedidoAdmin.class);
+        startService(service);
     }
 
     private void cargarMenu() {
@@ -218,7 +222,7 @@ public class Inicio extends AppCompatActivity
             }
         });
 
-        alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -229,7 +233,7 @@ public class Inicio extends AppCompatActivity
             }
         });
 
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -298,7 +302,7 @@ public class Inicio extends AppCompatActivity
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getTitle().equals(Common.UPDATE)) {
             mostrarDialogoActualizar(adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
-        } else if (item.getTitle().equals(Common.UPDATE)) {
+        } else if (item.getTitle().equals(Common.DELETE)) {
             eliminarCategoría(adapter.getRef(item.getOrder()).getKey());
 
         }
@@ -308,7 +312,6 @@ public class Inicio extends AppCompatActivity
     private void mostrarDialogoActualizar(final String key, final Categoria item) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Inicio.this);
         alertDialog.setTitle("Actualizar categoría");
-        alertDialog.setMessage("Llena toda la información");
 
         final LayoutInflater inflater = this.getLayoutInflater();
         View admin_categoria_layout = inflater.inflate(R.layout.admin_categoria_layout, null);
@@ -336,7 +339,7 @@ public class Inicio extends AppCompatActivity
             }
         });
 
-        alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -345,7 +348,7 @@ public class Inicio extends AppCompatActivity
             }
         });
 
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

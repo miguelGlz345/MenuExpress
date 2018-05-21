@@ -319,7 +319,7 @@ public class ListaComida extends AppCompatActivity {
             }
         });
 
-        alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -330,7 +330,7 @@ public class ListaComida extends AppCompatActivity {
             }
         });
 
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -404,9 +404,8 @@ public class ListaComida extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         if (item.getTitle().equals(Common.UPDATE)) {
             mostrarDialogoActualizar(adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
-        } else if (item.getTitle().equals(Common.UPDATE)) {
+        } else if (item.getTitle().equals(Common.DELETE)) {
             eliminarComida(adapter.getRef(item.getOrder()).getKey());
-
         }
         return super.onContextItemSelected(item);
     }
@@ -414,7 +413,6 @@ public class ListaComida extends AppCompatActivity {
     private void mostrarDialogoActualizar(final String key, final Comida item) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(ListaComida.this);
         alertDialog.setTitle("Actualizar categoría");
-        // alertDialog.setMessage("Llena toda la información");
 
         final LayoutInflater inflater = this.getLayoutInflater();
         View admin_comida_layout = inflater.inflate(R.layout.admin_comida_layout, null);
@@ -449,7 +447,7 @@ public class ListaComida extends AppCompatActivity {
             }
         });
 
-        alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("CONFIRMAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -461,7 +459,7 @@ public class ListaComida extends AppCompatActivity {
             }
         });
 
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();

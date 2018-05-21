@@ -70,19 +70,21 @@
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@android:color/white" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <com.rengwuxian.materialedittext.MaterialAutoCompleteTextView
                     android:id="@+id/edtPassword"
-                    android:layout_width="220dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:hint="Contraseña"
                     android:inputType="textPassword"
                     android:singleLine="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/cbMostrar"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
                     android:textSize="15sp"
@@ -95,27 +97,32 @@
                     android:id="@+id/cbMostrar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
                     android:gravity="center_vertical"
                     android:text="Mostrar"
                     android:textColor="@color/blanco"
                     app:cbd_strokeColor="@android:color/white"
                     app:cbd_tickColor="@color/colorPrimaryDark" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <com.rengwuxian.materialedittext.MaterialAutoCompleteTextView
                     android:id="@+id/edtConfPass"
-                    android:layout_width="220dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:hint="Confirmar contraseña"
                     android:inputType="textPassword"
                     android:singleLine="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/cbMostrar2"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
                     android:textSize="15sp"
@@ -128,12 +135,15 @@
                     android:id="@+id/cbMostrar2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="10dp"
                     android:gravity="center_vertical"
                     android:text="Mostrar"
                     android:textColor="@color/blanco"
                     app:cbd_strokeColor="@android:color/white"
                     app:cbd_tickColor="@color/colorPrimaryDark" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <info.hoang8f.widget.FButton
                 android:id="@+id/btnRegistroR"

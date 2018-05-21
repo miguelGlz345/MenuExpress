@@ -27,9 +27,9 @@ public class Common {
         if (estado.equals("0"))
             return "colocado";
         else if (estado.equals("1"))
-            return "en camino";
+            return "en proceso";
         else
-            return "enviado";
+            return "completado";
     }
 
     //Checar si está conectado a internet

@@ -1,13 +1,15 @@
 package com.menuexpress.equipo6.menuexpress.ViewHolder;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.View;
 import android.widget.TextView;
 
+import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.R;
 
-public class PedidoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class PedidoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
     public TextView txtPedidoId, txtPedidoEstado, txtPedidoUsuario, txtPedidoFecha;
 
@@ -22,6 +24,11 @@ public class PedidoViewHolder extends RecyclerView.ViewHolder implements View.On
         txtPedidoFecha = (TextView) itemView.findViewById(R.id.pedido_fecha);
 
         itemView.setOnClickListener(this);
+
+        //Admin
+        if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
+            itemView.setOnCreateContextMenuListener(this);
+        }
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -31,5 +38,12 @@ public class PedidoViewHolder extends RecyclerView.ViewHolder implements View.On
     @Override
     public void onClick(View v) {
         itemClickListener.onClick(v, getAdapterPosition(), false);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Seleccionar Opcion");
+        menu.add(0, 0, getAdapterPosition(), Common.UPDATE);
+        menu.add(0, 0, getAdapterPosition(), Common.DELETE);
     }
 }

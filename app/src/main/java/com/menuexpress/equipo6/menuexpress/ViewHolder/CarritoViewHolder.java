@@ -1,7 +1,6 @@
 package com.menuexpress.equipo6.menuexpress.ViewHolder;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.ContextMenu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,7 +11,7 @@ import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.R;
 
-public class CarritoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
+public class CarritoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     public TextView txt_carrito_nombre, txt_carrito_precio;
     public ElegantNumberButton btn_cant_carro;
@@ -32,7 +31,6 @@ public class CarritoViewHolder extends RecyclerView.ViewHolder implements View.O
         view_background = (RelativeLayout) itemView.findViewById(R.id.view_bg);
         view_foreground = (LinearLayout) itemView.findViewById(R.id.view_fg);
 
-        itemView.setOnCreateContextMenuListener(this);
     }
 
     public void setTxt_carrito_precio(TextView txt_carrito_precio) {
@@ -48,10 +46,5 @@ public class CarritoViewHolder extends RecyclerView.ViewHolder implements View.O
 
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        //menu.setHeaderTitle("Seleccionar Opcion");
-        //menu.add(0, 0, getAdapterPosition(), Common.DELETE);
-    }
 }
 

@@ -68,7 +68,15 @@ public class DetallesComida extends AppCompatActivity {
             }
         });
 
-        btnCarritoDet.setCount(new Database(this).getContCarrito(Common.currentUser.getEmail()));
+        //Admin
+        if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
+            btnNumero.setVisibility(View.GONE);
+            btnCarritoDet.setVisibility(View.GONE);
+        } else {
+            btnNumero.setVisibility(View.VISIBLE);
+            btnCarritoDet.setVisibility(View.VISIBLE);
+            btnCarritoDet.setCount(new Database(this).getContCarrito(Common.currentUser.getEmail()));
+        }
 
         nombre_comida = (TextView) findViewById(R.id.nombre_comida);
         precio_comida = (TextView) findViewById(R.id.comida_precio);

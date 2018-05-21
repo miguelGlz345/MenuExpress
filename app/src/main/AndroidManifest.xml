@@ -35,7 +35,16 @@
         <activity android:name=".DetallesComida" />
         <activity android:name=".Carrito" />
         <activity android:name=".PedidoEstado" />
-        <activity android:name=".DetallesPedido"></activity>
+        <activity android:name=".DetallesPedido" />
+
+        <service
+            android:name=".Service.ListenPedidoAdmin"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Service.ListenPedido"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
