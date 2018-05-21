@@ -1,12 +1,17 @@
 package com.menuexpress.equipo6.menuexpress;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,17 +27,27 @@ import android.widget.Toast;
 import com.andremion.counterfab.CounterFab;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Categoria;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.MenuViewHolder;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
+import java.util.UUID;
+
+import info.hoang8f.widget.FButton;
 import io.paperdb.Paper;
 
 public class Inicio extends AppCompatActivity
@@ -50,6 +65,16 @@ public class Inicio extends AppCompatActivity
     private String userid;
     private CounterFab counterFabIni;
 
+    private final int PICK_IMAGE_REQUEST = 71;
+    //Variables admin
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private MaterialEditText adminEditNombre;
+    private FButton adminBtnSelect, adminBtnUpload;
+    private Categoria nuevaCategoria;
+    private Uri saveUri;
+    private DrawerLayout drawer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +89,10 @@ public class Inicio extends AppCompatActivity
         firebaseDatabase = FirebaseDatabase.getInstance();
         category = firebaseDatabase.getReference("categoria");
 
+        //variables admin
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
         //Inicializar Paper
         Paper.init(this);
 
@@ -71,14 +100,20 @@ public class Inicio extends AppCompatActivity
         counterFabIni.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Inicio.this, Carrito.class);
-                startActivity(intent);
+
+                //Cargar funcionalidades de administrador
+                if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
+                    mostrarDialogo();
+                } else {
+                    Intent intent = new Intent(Inicio.this, Carrito.class);
+                    startActivity(intent);
+                }
             }
         });
 
         counterFabIni.setCount(new Database(this).getContCarrito(Common.currentUser.getEmail()));
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -99,6 +134,13 @@ public class Inicio extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
+        //Cargar funcionalidades de administrador
+        if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
+            counterFabIni.setImageResource(R.drawable.ic__add_white_24dp);
+        } else {
+            counterFabIni.setImageResource(R.drawable.ic_shopping_cart_black_24dp);
+        }
+
         if (Common.isConnectedToInternet(this)) {
             cargarMenu();
         } else {
@@ -106,14 +148,6 @@ public class Inicio extends AppCompatActivity
             return;
         }
     }
-
-    /*private  void updateToken(String token){
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference tokens = db.getReference("Tokens");
-        Token data = new Token (token, false);
-        tokens.child(Common.currentUser.getEmail().setValue(data));
-    }*/
-
 
     private void cargarMenu() {
         FirebaseRecyclerOptions<Categoria> options = new FirebaseRecyclerOptions.Builder<Categoria>()
@@ -153,6 +187,226 @@ public class Inicio extends AppCompatActivity
         recycler_menu.setAdapter(adapter);
 
     }
+
+    //Admin ini ----------------------------------------------------------------------
+
+    private void mostrarDialogo() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Inicio.this);
+        alertDialog.setTitle("Agregar nueva categoría");
+        alertDialog.setMessage("Llena toda la información");
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View admin_categoria_layout = inflater.inflate(R.layout.admin_categoria_layout, null);
+
+        adminEditNombre = admin_categoria_layout.findViewById(R.id.adminEditNombre);
+        adminBtnSelect = admin_categoria_layout.findViewById(R.id.adminBtnSelect);
+        adminBtnUpload = admin_categoria_layout.findViewById(R.id.adminBtnUpload);
+
+        alertDialog.setView(admin_categoria_layout);
+        alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
+
+        adminBtnSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                elegirImagen();
+            }
+        });
+
+        adminBtnUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                subirImagen();
+            }
+        });
+
+        alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                if (nuevaCategoria != null) {
+                    category.push().setValue(nuevaCategoria);
+                    Snackbar.make(drawer, "Categoría: " + nuevaCategoria.getNombre() + " fue agregada", Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            saveUri = data.getData();
+            adminBtnSelect.setText("Imagen Selccionada");
+        }
+    }
+
+    public void elegirImagen() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Seleccioar imagen"), PICK_IMAGE_REQUEST);
+    }
+
+    public void subirImagen() {
+        if (saveUri != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Subiendo...");
+            progressDialog.show();
+
+            String nomImagen = UUID.randomUUID().toString();
+            final StorageReference imagenFolder = storageReference.child("images/" + nomImagen);
+            imagenFolder.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Toast.makeText(Inicio.this, "Subido correctamente", Toast.LENGTH_SHORT).show();
+                    imagenFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            nuevaCategoria = new Categoria(adminEditNombre.getText().toString(), uri.toString());
+                        }
+                    });
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(Inicio.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressDialog.setMessage("Subido " + progress + "%");
+                        }
+                    });
+
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getTitle().equals(Common.UPDATE)) {
+            mostrarDialogoActualizar(adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
+        } else if (item.getTitle().equals(Common.UPDATE)) {
+            eliminarCategoría(adapter.getRef(item.getOrder()).getKey());
+
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    private void mostrarDialogoActualizar(final String key, final Categoria item) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(Inicio.this);
+        alertDialog.setTitle("Actualizar categoría");
+        alertDialog.setMessage("Llena toda la información");
+
+        final LayoutInflater inflater = this.getLayoutInflater();
+        View admin_categoria_layout = inflater.inflate(R.layout.admin_categoria_layout, null);
+
+        adminEditNombre = admin_categoria_layout.findViewById(R.id.adminEditNombre);
+        adminBtnSelect = admin_categoria_layout.findViewById(R.id.adminBtnSelect);
+        adminBtnUpload = admin_categoria_layout.findViewById(R.id.adminBtnUpload);
+
+        alertDialog.setView(admin_categoria_layout);
+        alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
+
+        adminEditNombre.setText(item.getNombre());
+
+        adminBtnSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                elegirImagen();
+            }
+        });
+
+        adminBtnUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarImagen(item);
+            }
+        });
+
+        alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                item.setNombre(adminEditNombre.getText().toString());
+                category.child(key).setValue(item);
+            }
+        });
+
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+    }
+
+    public void cambiarImagen(final Categoria item) {
+        if (saveUri != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Subiendo...");
+            progressDialog.show();
+
+            String nomImagen = UUID.randomUUID().toString();
+            final StorageReference imagenFolder = storageReference.child("images/" + nomImagen);
+            imagenFolder.putFile(saveUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Toast.makeText(Inicio.this, "Subido correctamente", Toast.LENGTH_SHORT).show();
+                    imagenFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            item.setImagen(uri.toString());
+                        }
+                    });
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(Inicio.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressDialog.setMessage("Subido " + progress + "%");
+                        }
+                    });
+
+        }
+    }
+
+    private void eliminarCategoría(String key) {
+        category.child(key).removeValue();
+    }
+
+    //Anmin fin ----------------------------------------------------------------------
+
+    /*private  void updateToken(String token){
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("Tokens");
+        Token data = new Token (token, false);
+        tokens.child(Common.currentUser.getEmail().setValue(data));
+    }*/
 
     @Override
     public void onBackPressed() {
@@ -224,7 +478,6 @@ public class Inicio extends AppCompatActivity
             cargarMenu();
         } else {
             irAWelcome();
-
         }
     }
 

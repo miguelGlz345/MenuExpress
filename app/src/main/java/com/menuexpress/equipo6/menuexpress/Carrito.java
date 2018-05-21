@@ -145,9 +145,9 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getTitle().equals(Common.DELETE)) {
-            deleteCarrito(item.getOrder());
-        }
+        //if (item.getTitle().equals(Common.DELETE)) {
+        //  deleteCarrito(item.getOrder());
+        //}
         return true;
     }
 

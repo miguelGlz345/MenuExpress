@@ -124,9 +124,12 @@ public class IngresoActivity extends AppCompatActivity {
                                             finish();
                                             Toast.makeText(IngresoActivity.this, "Bienvenido administrador", Toast.LENGTH_SHORT).show();
                                         } else {
+                                            Common.currentUser = usuario;
+                                            Intent intent = new Intent(IngresoActivity.this, Inicio.class);
+                                            startActivity(intent);
                                             progressDialog.dismiss();
+                                            finish();
                                             Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
-
                                         }
 
                                     } else {

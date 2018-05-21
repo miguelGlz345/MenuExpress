@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
-import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.R;
 
@@ -51,8 +50,8 @@ public class CarritoViewHolder extends RecyclerView.ViewHolder implements View.O
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Seleccionar Opcion");
-        menu.add(0, 0, getAdapterPosition(), Common.DELETE);
+        //menu.setHeaderTitle("Seleccionar Opcion");
+        //menu.add(0, 0, getAdapterPosition(), Common.DELETE);
     }
 }
 
