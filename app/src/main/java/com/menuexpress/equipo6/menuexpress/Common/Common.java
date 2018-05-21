@@ -21,6 +21,8 @@ public class Common {
     public static final String DELETE = "Borrar";
     public static final String UPDATE = "Actualizar";
 
+    public static final int PICK_IMAGE_REQUEST = 71;
+
     public static String convertirCodigoEstado(String estado) {
         if (estado.equals("0"))
             return "colocado";

@@ -65,7 +65,6 @@ public class Inicio extends AppCompatActivity
     private String userid;
     private CounterFab counterFabIni;
 
-    private final int PICK_IMAGE_REQUEST = 71;
     //Variables admin
     private FirebaseStorage storage;
     private StorageReference storageReference;
@@ -89,7 +88,7 @@ public class Inicio extends AppCompatActivity
         firebaseDatabase = FirebaseDatabase.getInstance();
         category = firebaseDatabase.getReference("categoria");
 
-        //variables admin
+        //Variables admin
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
@@ -243,7 +242,7 @@ public class Inicio extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == Common.PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             saveUri = data.getData();
             adminBtnSelect.setText("Imagen Selccionada");
         }
@@ -253,7 +252,7 @@ public class Inicio extends AppCompatActivity
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Seleccioar imagen"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Seleccioar imagen"), Common.PICK_IMAGE_REQUEST);
     }
 
     public void subirImagen() {
@@ -268,7 +267,7 @@ public class Inicio extends AppCompatActivity
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     progressDialog.dismiss();
-                    Toast.makeText(Inicio.this, "Subido correctamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Inicio.this, "Imagen subida correctamente", Toast.LENGTH_SHORT).show();
                     imagenFolder.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
@@ -288,7 +287,7 @@ public class Inicio extends AppCompatActivity
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            progressDialog.setMessage("Subido " + progress + "%");
+                            progressDialog.setMessage("Subiendo " + progress + "%");
                         }
                     });
 

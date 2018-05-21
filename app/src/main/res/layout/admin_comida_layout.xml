@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:elevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,14 +12,60 @@
         android:orientation="vertical">
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/adminEditNombre"
+            android:id="@+id/adminEditNombreComida"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nombre"
+            android:inputType="text"
             android:text=""
             android:textColor="@color/colorPrimary"
             android:textColorHint="@color/colorPrimary"
-            android:textSize="34sp"
+            android:textSize="28sp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/adminEditDescripComida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descripción"
+            android:inputType="text"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="28sp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/adminEditPrecioComida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Precio"
+            android:inputType="number"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="28sp"
+            app:met_baseColor="@color/colorPrimary"
+            app:met_floatingLabel="highlight"
+            app:met_primaryColor="@color/colorPrimary"
+            app:met_singleLineEllipsis="true" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/adminEditDescuentoComida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Descuento"
+            android:inputType="number"
+            android:text=""
+            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/colorPrimary"
+            android:textSize="28sp"
             app:met_baseColor="@color/colorPrimary"
             app:met_floatingLabel="highlight"
             app:met_primaryColor="@color/colorPrimary"
@@ -31,7 +78,7 @@
             android:weightSum="2">
 
             <info.hoang8f.widget.FButton
-                android:id="@+id/adminBtnSelect"
+                android:id="@+id/adminBtnSelectComida"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -39,7 +86,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_weight="1"
-                android:text="SELECCIONAR IMAGEN"
+                android:text="SELECCIONAR"
                 android:textColor="@android:color/white"
                 app:cornerRadius="4dp"
                 app:fButtonColor="@color/colorPrimary"
@@ -48,7 +95,7 @@
                 app:shadowHeight="5dp" />
 
             <info.hoang8f.widget.FButton
-                android:id="@+id/adminBtnUpload"
+                android:id="@+id/adminBtnUploadComida"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -63,10 +110,7 @@
                 app:shadowColor="@android:color/black"
                 app:shadowEnabled="true"
                 app:shadowHeight="5dp" />
-
         </LinearLayout>
-
-
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</ScrollView>

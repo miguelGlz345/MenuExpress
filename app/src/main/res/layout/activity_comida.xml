@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/rootLayoutComida"
     tools:context=".ListaComida">
 
     <com.mancj.materialsearchbar.MaterialSearchBar
@@ -20,6 +21,20 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/busqueda"
         android:scrollbars="vertical" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.andremion.counterfab.CounterFab
+            android:id="@+id/counterFabComida"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:tint="@color/blanco"
+            app:srcCompat="@drawable/ic__add_white_24dp" />
+    </android.support.design.widget.CoordinatorLayout>
 
 
 </RelativeLayout>

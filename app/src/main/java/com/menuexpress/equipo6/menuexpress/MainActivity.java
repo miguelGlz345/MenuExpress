@@ -1,5 +1,6 @@
 package com.menuexpress.equipo6.menuexpress;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,7 +9,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -116,9 +116,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void usuarioRecordado(String email, String pass) {
 
+        final ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        progressDialog.setMessage("Espere por favor..");
+        progressDialog.show();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
-
             usuario.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -130,10 +132,8 @@ public class MainActivity extends AppCompatActivity {
                         Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
                         //Se guarda el usuario actual
                         Common.currentUser = usuario;
-                        //Toast.makeText(MainActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
                         irAInicio();
-                    } else {
-                        Toast.makeText(MainActivity.this, "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 }
 
