@@ -31,8 +31,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -402,10 +406,27 @@ public class Inicio extends AppCompatActivity
     }
 
     private void eliminarCategoría(String key) {
+        DatabaseReference comidas = firebaseDatabase.getReference("comida");
+        Query comidaEnCategoria = comidas.orderByChild("idCat").equalTo(key);
+        comidaEnCategoria.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
+                    postSnapShot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         category.child(key).removeValue();
     }
 
-    //Anmin fin ----------------------------------------------------------------------
+    //Admin fin ----------------------------------------------------------------------
 
     /*private  void updateToken(String token){
         FirebaseDatabase db = FirebaseDatabase.getInstance();

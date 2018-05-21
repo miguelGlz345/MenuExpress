@@ -68,7 +68,8 @@ public class ListenPedido extends Service implements ChildEventListener {
                 .setTicker("MemuExpress")
                 .setContentInfo("Nuevo pedido")
                 .setContentText("Tienes un nuevo pedido #" + key)
-                .setSmallIcon(R.mipmap.ic_launcher);
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(contentIntent);
 
         NotificationManager notificationManager = (NotificationManager) getBaseContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
