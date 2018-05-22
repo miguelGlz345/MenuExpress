@@ -204,7 +204,6 @@ public class Inicio extends AppCompatActivity
     private void mostrarDialogo() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(Inicio.this);
         alertDialog.setTitle("Agregar nueva categoría");
-        alertDialog.setMessage("Llena toda la información");
 
         LayoutInflater inflater = this.getLayoutInflater();
         View admin_categoria_layout = inflater.inflate(R.layout.admin_categoria_layout, null);

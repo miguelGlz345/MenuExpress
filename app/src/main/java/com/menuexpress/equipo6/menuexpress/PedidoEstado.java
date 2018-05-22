@@ -52,16 +52,20 @@ public class PedidoEstado extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        //if (getIntent() == null)
+        // if (getIntent() == null) {
         cargarPedidos(Common.currentUser.getEmail());
-        //else
-        //  cargarPedidos(getIntent().getStringExtra("email"));
+        // } else {
+        //     if (!Boolean.parseBoolean(Common.currentUser.getIsAdmin()))
+        cargarPedidos(getIntent().getStringExtra("email"));
+        // }
     }
 
     private void cargarPedidos(String email) {
         FirebaseRecyclerOptions<Solicitar> options;
         //Admin
         if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
+            //Query orderByDate = solicitudes.orderByChild("fecha");
+
             options = new FirebaseRecyclerOptions.Builder<Solicitar>()
                     .setQuery(solicitudes, Solicitar.class)
                     .build();
@@ -79,7 +83,7 @@ public class PedidoEstado extends AppCompatActivity {
                 holder.txtPedidoId.setText(String.format("Clave : %s", adapter.getRef(position).getKey()));
                 holder.txtPedidoUsuario.setText(String.format("A nombre de : %s", model.getNombre()));
                 holder.txtPedidoEstado.setText(String.format("Estado : %s", Common.convertirCodigoEstado(model.getEstado())));
-                holder.txtPedidoFecha.setText(String.format("Fecha : %s", Common.getFecha(Long.parseLong(adapter.getRef(position).getKey()))));
+                holder.txtPedidoFecha.setText(String.format("Fecha : %s", model.getFecha()));
 
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override

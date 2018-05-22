@@ -96,7 +96,7 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
         );
 
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
-
+        final String num_pedido = String.valueOf(System.currentTimeMillis());
         //Si es si, se envia el pedido
         alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
@@ -106,7 +106,8 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
                         Common.currentUser.getEmail(),
                         txtTotalPrecio.getText().toString(),
                         carrito,
-                        "0"
+                        "0",
+                        Common.getFecha(Long.parseLong(num_pedido))
                 );
 
                 //Eviar a firebase

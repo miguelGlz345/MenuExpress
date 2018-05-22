@@ -9,17 +9,19 @@ public class Solicitar {
     private String direccion;
     private String total;
     private String estado;
+    private String fecha;
     private List<Pedido> comidas; //la comida en el pedido
 
     public Solicitar() {
     }
 
-    public Solicitar(String nombre, String email, String total, List<Pedido> comidas, String estado) {
+    public Solicitar(String nombre, String email, String total, List<Pedido> comidas, String estado, String fecha) {
         this.nombre = nombre;
         this.email = email;
         this.total = total;
         this.comidas = comidas;
-        this.estado = estado; //0=colocado, 1=envío, 2=enviado
+        this.estado = estado;
+        this.fecha = fecha;
     }
 
     public String getTelefono() {
@@ -68,6 +70,14 @@ public class Solicitar {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(String fecha) {
+        this.fecha = fecha;
     }
 
     public List<Pedido> getComidas() {
