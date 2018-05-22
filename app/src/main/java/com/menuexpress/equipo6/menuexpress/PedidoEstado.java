@@ -56,7 +56,7 @@ public class PedidoEstado extends AppCompatActivity {
         cargarPedidos(Common.currentUser.getEmail());
         // } else {
         //     if (!Boolean.parseBoolean(Common.currentUser.getIsAdmin()))
-        cargarPedidos(getIntent().getStringExtra("email"));
+        //cargarPedidos(getIntent().getStringExtra("email"));
         // }
     }
 
@@ -64,7 +64,6 @@ public class PedidoEstado extends AppCompatActivity {
         FirebaseRecyclerOptions<Solicitar> options;
         //Admin
         if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
-            //Query orderByDate = solicitudes.orderByChild("fecha");
 
             options = new FirebaseRecyclerOptions.Builder<Solicitar>()
                     .setQuery(solicitudes, Solicitar.class)
