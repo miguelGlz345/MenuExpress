@@ -8,22 +8,36 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
+import com.menuexpress.equipo6.menuexpress.Model.MyResponse;
+import com.menuexpress.equipo6.menuexpress.Model.Notificacion;
+import com.menuexpress.equipo6.menuexpress.Model.Sender;
 import com.menuexpress.equipo6.menuexpress.Model.Solicitar;
+import com.menuexpress.equipo6.menuexpress.Model.Token;
+import com.menuexpress.equipo6.menuexpress.Remote.APIService;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.PedidoViewHolder;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PedidoEstado extends AppCompatActivity {
 
@@ -36,11 +50,15 @@ public class PedidoEstado extends AppCompatActivity {
 
     //Variables Admin
     private MaterialSpinner spinner;
+    APIService mService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pedido_estado);
+
+        //Iniciar service
+        mService = Common.getFCMService();
 
         //Iniciarlizar firebase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -56,7 +74,7 @@ public class PedidoEstado extends AppCompatActivity {
         cargarPedidos(Common.currentUser.getEmail());
         // } else {
         //     if (!Boolean.parseBoolean(Common.currentUser.getIsAdmin()))
-        cargarPedidos(getIntent().getStringExtra("email"));
+        //cargarPedidos(getIntent().getStringExtra("email"));
         // }
     }
 
@@ -64,7 +82,6 @@ public class PedidoEstado extends AppCompatActivity {
         FirebaseRecyclerOptions<Solicitar> options;
         //Admin
         if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
-            //Query orderByDate = solicitudes.orderByChild("fecha");
 
             options = new FirebaseRecyclerOptions.Builder<Solicitar>()
                     .setQuery(solicitudes, Solicitar.class)
@@ -144,6 +161,9 @@ public class PedidoEstado extends AppCompatActivity {
                 dialog.dismiss();
                 item.setEstado(String.valueOf(spinner.getSelectedIndex()));
                 solicitudes.child(localKey).setValue(item);
+
+                enviarEstadoPedidoAUsuario(localKey, item);
+
             }
         });
 
@@ -159,6 +179,44 @@ public class PedidoEstado extends AppCompatActivity {
 
     private void eliminarPedido(String key) {
         solicitudes.child(key).removeValue();
+    }
+
+    //Notificaciones
+    private void enviarEstadoPedidoAUsuario(final String key, final Solicitar item) {
+        DatabaseReference tokens = firebaseDatabase.getReference("tokens");
+        tokens.orderByKey().equalTo(Common.currentUser.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
+                    Token token = postSnapShot.getValue(Token.class);
+
+                    Notificacion notificacion = new Notificacion("MenuExpress", "Tu pedido " + key + " fue actualizado");
+                    Sender content = new Sender(token.getToken(), notificacion);
+
+                    mService.sendNotification(content)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.body().success == 1) {
+                                        Toast.makeText(PedidoEstado.this, "El pedido fue actualizado", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(PedidoEstado.this, "El pedido fue actualizado pero falló enviar la notificación", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+                                    Log.e("ERROR", t.getMessage());
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     //Anmin fin ----------------------------------------------------------------------

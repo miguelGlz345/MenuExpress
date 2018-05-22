@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,14 +18,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Helper.RecyclerItemTouchHelper;
 import com.menuexpress.equipo6.menuexpress.Interface.RecyclerItemTouchHelperListener;
+import com.menuexpress.equipo6.menuexpress.Model.MyResponse;
+import com.menuexpress.equipo6.menuexpress.Model.Notificacion;
 import com.menuexpress.equipo6.menuexpress.Model.Pedido;
+import com.menuexpress.equipo6.menuexpress.Model.Sender;
 import com.menuexpress.equipo6.menuexpress.Model.Solicitar;
+import com.menuexpress.equipo6.menuexpress.Model.Token;
+import com.menuexpress.equipo6.menuexpress.Remote.APIService;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.CarritoAdapter;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.CarritoViewHolder;
 
@@ -34,6 +44,9 @@ import java.util.List;
 import java.util.Locale;
 
 import info.hoang8f.widget.FButton;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelperListener {
 
@@ -45,9 +58,10 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference resquest;
+    APIService mService;
 
     private RelativeLayout rootLayout;
+    private DatabaseReference solicitudes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +70,13 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
 
         rootLayout = (RelativeLayout) findViewById(R.id.rootLayout);
 
+        //Iniciar service
+        mService = Common.getFCMService();
+
         //Iniciarlizar firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        resquest = firebaseDatabase.getReference("solicitud");
+        solicitudes = firebaseDatabase.getReference("solicitud");
 
         recyclerView = (RecyclerView) findViewById(R.id.listaCarrito);
         recyclerView.setHasFixedSize(true);
@@ -111,11 +128,16 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
                 );
 
                 //Eviar a firebase
-                String num_pedido = String.valueOf(System.currentTimeMillis());
-                resquest.child(num_pedido).setValue(solicitar);
+                //String num_pedido = String.valueOf(System.currentTimeMillis());
+
+                solicitudes.child(num_pedido).setValue(solicitar);
+
                 new Database(getBaseContext()).limpiarCarrito(Common.currentUser.getEmail());
-                Toast.makeText(Carrito.this, "Gracias, orden recibida", Toast.LENGTH_SHORT).show();
-                finish();
+
+                sendNotificationPedido(num_pedido);
+
+                //Toast.makeText(Carrito.this, "Gracias, orden recibida", Toast.LENGTH_SHORT).show();
+                //finish();
             }
         });
 
@@ -126,6 +148,53 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
             }
         });
         alertDialog.show();
+    }
+
+    private void sendNotificationPedido(final String num_pedido) {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("tokens");
+        Query data = tokens.orderByChild("isServerToken").equalTo(true);
+        data.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapShot : dataSnapshot.getChildren()) {
+
+                    //Notificaciones-------------
+                    Token serverToken = postSnapShot.getValue(Token.class);
+
+                    Notificacion notificacion = new Notificacion("MenuExpress", "Tienes un nuevo pedido " + num_pedido);
+                    Sender content = new Sender(serverToken.getToken(), notificacion);
+
+                    mService.sendNotification(content)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+
+                                    if (response.code() == 200) {
+                                        if (response.body().success == 1) {
+                                            Toast.makeText(Carrito.this, "Gracias, orden recibida", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        } else {
+                                            Toast.makeText(Carrito.this, "Fallo", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    }
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+                                    Log.e("Error", t.getMessage());
+                                }
+                            });
+                    //Notificaciones-------------
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void cargarListaComida() {

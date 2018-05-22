@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -45,8 +46,7 @@ import com.menuexpress.equipo6.menuexpress.Common.Common;
 import com.menuexpress.equipo6.menuexpress.Database.Database;
 import com.menuexpress.equipo6.menuexpress.Interface.ItemClickListener;
 import com.menuexpress.equipo6.menuexpress.Model.Categoria;
-import com.menuexpress.equipo6.menuexpress.Service.ListenPedido;
-import com.menuexpress.equipo6.menuexpress.Service.ListenPedidoAdmin;
+import com.menuexpress.equipo6.menuexpress.Model.Token;
 import com.menuexpress.equipo6.menuexpress.ViewHolder.MenuViewHolder;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
@@ -142,14 +142,11 @@ public class Inicio extends AppCompatActivity
         //Cargar funcionalidades de administrador
         if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
             counterFabIni.setImageResource(R.drawable.ic__add_white_24dp);
+            updateTokenAdmin(FirebaseInstanceId.getInstance().getToken());
         } else {
             counterFabIni.setImageResource(R.drawable.ic_shopping_cart_black_24dp);
+            updateToken(FirebaseInstanceId.getInstance().getToken());
         }
-
-        Intent service = new Intent(Inicio.this, ListenPedido.class);
-        startService(service);
-        Intent serviceAdmin = new Intent(Inicio.this, ListenPedidoAdmin.class);
-        startService(serviceAdmin);
 
         if (Common.isConnectedToInternet(this)) {
             cargarMenu();
@@ -158,6 +155,20 @@ public class Inicio extends AppCompatActivity
             return;
         }
 
+    }
+
+    private void updateToken(String token) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("tokens");
+        Token data = new Token(token, false); //false porque este token es enviado del Cliente
+        tokens.child(Common.currentUser.getUid()).setValue(data);
+    }
+
+    private void updateTokenAdmin(String token) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference tokens = db.getReference("tokens");
+        Token data = new Token(token, true); //true porque este token es enviado del Servidor
+        tokens.child(Common.currentUser.getUid()).setValue(data);
     }
 
     private void cargarMenu() {
@@ -426,13 +437,6 @@ public class Inicio extends AppCompatActivity
     }
 
     //Admin fin ----------------------------------------------------------------------
-
-    /*private  void updateToken(String token){
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference tokens = db.getReference("Tokens");
-        Token data = new Token (token, false);
-        tokens.child(Common.currentUser.getEmail().setValue(data));
-    }*/
 
     @Override
     public void onBackPressed() {

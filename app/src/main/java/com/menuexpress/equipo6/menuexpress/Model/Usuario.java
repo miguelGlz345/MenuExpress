@@ -9,6 +9,7 @@ public class Usuario {
     private String contraseña;
     private String direccion;
     private String isAdmin;
+    private String Uid;
 
     public Usuario() {
     }
@@ -90,6 +91,14 @@ public class Usuario {
 
     public void setIsAdmin(String isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public String getUid() {
+        return Uid;
+    }
+
+    public void setUid(String uid) {
+        Uid = uid;
     }
 }
 

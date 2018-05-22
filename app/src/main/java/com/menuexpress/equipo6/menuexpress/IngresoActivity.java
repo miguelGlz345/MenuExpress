@@ -113,6 +113,7 @@ public class IngresoActivity extends AppCompatActivity {
                                     if (dataSnapshot.child(user_id).exists()) {
                                         //Obtener la informacion del usuario
                                         Usuario usuario = dataSnapshot.child(user_id).getValue(Usuario.class);
+                                        usuario.setUid(user_id);
 
                                         //Comprobar si es administrador
                                         if (Boolean.parseBoolean(usuario.getIsAdmin())) {

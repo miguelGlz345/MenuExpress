@@ -6,6 +6,8 @@ import android.net.NetworkInfo;
 
 import com.menuexpress.equipo6.menuexpress.Model.Solicitar;
 import com.menuexpress.equipo6.menuexpress.Model.Usuario;
+import com.menuexpress.equipo6.menuexpress.Remote.APIService;
+import com.menuexpress.equipo6.menuexpress.Remote.RetrofitClient;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -15,6 +17,8 @@ public class Common {
     public static Usuario currentUser;
     public static Solicitar currentResquest;
 
+    private static final String BASE_URL = "https://fcm.googleapis.com/";
+
     public static final String EMAIL_KEY = "email";
     public static final String PASS_KEY = "contraseña";
 
@@ -22,6 +26,10 @@ public class Common {
     public static final String UPDATE = "Actualizar";
 
     public static final int PICK_IMAGE_REQUEST = 71;
+
+    public static APIService getFCMService() {
+        return RetrofitClient.getClient(BASE_URL).create(APIService.class);
+    }
 
     public static String convertirCodigoEstado(String estado) {
         if (estado.equals("0"))
