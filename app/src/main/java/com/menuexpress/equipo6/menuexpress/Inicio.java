@@ -79,6 +79,8 @@ public class Inicio extends AppCompatActivity
     private Categoria nuevaCategoria;
     private Uri saveUri;
     private DrawerLayout drawer;
+    private Menu menu;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,11 +141,15 @@ public class Inicio extends AppCompatActivity
         layoutManager = new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
+
+        menu = navigationView.getMenu();
         //Cargar funcionalidades de administrador
         if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
             counterFabIni.setImageResource(R.drawable.ic__add_white_24dp);
+            menu.findItem(R.id.nav_carro).setVisible(false);
         } else {
             counterFabIni.setImageResource(R.drawable.ic_shopping_cart_black_24dp);
+            menu.findItem(R.id.nav_carro).setVisible(true);
         }
 
         Intent service = new Intent(Inicio.this, ListenPedido.class);
@@ -427,13 +433,6 @@ public class Inicio extends AppCompatActivity
 
     //Admin fin ----------------------------------------------------------------------
 
-    /*private  void updateToken(String token){
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference tokens = db.getReference("Tokens");
-        Token data = new Token (token, false);
-        tokens.child(Common.currentUser.getEmail().setValue(data));
-    }*/
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -447,8 +446,11 @@ public class Inicio extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
         getMenuInflater().inflate(R.menu.inicio, menu);
+
         return true;
+
     }
 
     @Override

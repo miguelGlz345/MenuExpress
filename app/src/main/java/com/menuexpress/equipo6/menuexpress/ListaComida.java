@@ -86,7 +86,6 @@ public class ListaComida extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
         comida = firebaseDatabase.getReference("comida");
 
-
         //cargar comida
         recycler_comida = (RecyclerView) findViewById(R.id.reclycler_comida);
         recycler_comida.setHasFixedSize(true);
