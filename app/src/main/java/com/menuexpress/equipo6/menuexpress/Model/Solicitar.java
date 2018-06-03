@@ -10,18 +10,20 @@ public class Solicitar {
     private String total;
     private String estado;
     private String fecha;
+    private String hora;
     private List<Pedido> comidas; //la comida en el pedido
 
     public Solicitar() {
     }
 
-    public Solicitar(String nombre, String email, String total, List<Pedido> comidas, String estado, String fecha) {
+    public Solicitar(String nombre, String email, String total, List<Pedido> comidas, String estado, String fecha, String hora) {
         this.nombre = nombre;
         this.email = email;
         this.total = total;
         this.comidas = comidas;
         this.estado = estado;
         this.fecha = fecha;
+        this.hora = hora;
     }
 
     public String getTelefono() {
@@ -78,6 +80,14 @@ public class Solicitar {
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
+    }
+
+    public String getHora() {
+        return hora;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 
     public List<Pedido> getComidas() {

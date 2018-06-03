@@ -1,5 +1,6 @@
 package com.menuexpress.equipo6.menuexpress;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,11 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -87,13 +90,22 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
 
     private void showAlertDialog() {
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(Carrito.this);
-        alertDialog.setTitle("CONFIRMACION");
-        alertDialog.setMessage("CONFIRMAR PEDIDO");
+        alertDialog.setTitle("CONFIRMAR PEDIDO");
+        alertDialog.setMessage("HORA A RECOGER");
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
         );
+
+        //Time picker
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.time_picker, null, false);
+        final TimePicker myTimePicker = (TimePicker) view.findViewById(R.id.myTimePicker);
+
+
+        alertDialog.setView(view);
+
 
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
         final String num_pedido = String.valueOf(System.currentTimeMillis());
@@ -101,13 +113,20 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
         alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                myTimePicker.is24HourView();
+                String currentHourText = myTimePicker.getCurrentHour().toString();
+                String currentMinuteText = myTimePicker.getCurrentMinute().toString();
+                //Toast.makeText(Carrito.this, currentHourText + ":" + currentMinuteText, Toast.LENGTH_SHORT).show();;
+
                 Solicitar solicitar = new Solicitar(
                         Common.currentUser.getNombre(),
                         Common.currentUser.getEmail(),
                         txtTotalPrecio.getText().toString(),
                         carrito,
                         "0",
-                        Common.getFecha(Long.parseLong(num_pedido))
+                        Common.getFecha(Long.parseLong(num_pedido)),
+                        currentHourText + ":" + currentMinuteText
                 );
 
                 //Eviar a firebase

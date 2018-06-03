@@ -11,7 +11,7 @@ import com.menuexpress.equipo6.menuexpress.R;
 
 public class PedidoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnCreateContextMenuListener {
 
-    public TextView txtPedidoId, txtPedidoEstado, txtPedidoUsuario, txtPedidoFecha;
+    public TextView txtPedidoId, txtPedidoEstado, txtPedidoUsuario, txtPedidoFecha, txtPedidoHora;
 
     private ItemClickListener itemClickListener;
 
@@ -22,6 +22,7 @@ public class PedidoViewHolder extends RecyclerView.ViewHolder implements View.On
         txtPedidoUsuario = (TextView) itemView.findViewById(R.id.pedido_usuario);
         txtPedidoEstado = (TextView) itemView.findViewById(R.id.pedido_estado);
         txtPedidoFecha = (TextView) itemView.findViewById(R.id.pedido_fecha);
+        txtPedidoHora = (TextView) itemView.findViewById(R.id.pedido_hora);
 
         itemView.setOnClickListener(this);
 

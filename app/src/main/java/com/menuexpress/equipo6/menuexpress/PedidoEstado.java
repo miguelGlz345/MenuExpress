@@ -83,6 +83,7 @@ public class PedidoEstado extends AppCompatActivity {
                 holder.txtPedidoUsuario.setText(String.format("A nombre de : %s", model.getNombre()));
                 holder.txtPedidoEstado.setText(String.format("Estado : %s", Common.convertirCodigoEstado(model.getEstado())));
                 holder.txtPedidoFecha.setText(String.format("Fecha : %s", model.getFecha()));
+                holder.txtPedidoHora.setText(String.format("Recoger a las  : %s", model.getHora()));
 
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
