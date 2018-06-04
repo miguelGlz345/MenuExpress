@@ -8,7 +8,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +36,9 @@ public class PedidoEstado extends AppCompatActivity {
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference solicitudes;
 
+    private Query pedidobyUser;
+    private Query pedidobyEstado;
+
     //Variables Admin
     private MaterialSpinner spinner;
 
@@ -41,6 +46,10 @@ public class PedidoEstado extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pedido_estado);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarPedido);
+        toolbar.setTitle("Pedidos");
+        setSupportActionBar(toolbar);
 
         //Iniciarlizar firebase
         firebaseAuth = FirebaseAuth.getInstance();
@@ -53,26 +62,26 @@ public class PedidoEstado extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // if (getIntent() == null) {
-        cargarPedidos(Common.currentUser.getEmail());
+        cargarPedidos(Common.currentUser.getEmail(), "0");
         // } else {
         //     if (!Boolean.parseBoolean(Common.currentUser.getIsAdmin()))
         //cargarPedidos(getIntent().getStringExtra("email"));
         // }
     }
 
-    private void cargarPedidos(String email) {
+    private void cargarPedidos(String email, String estado) {
         FirebaseRecyclerOptions<Solicitar> options;
         //String estado = Common.currentResquest.getEstado();
         //Admin
         if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
-            Query pedidobyEstado = solicitudes.orderByChild("estado");
+            pedidobyEstado = solicitudes.orderByChild("estado").equalTo(estado);
 
             options = new FirebaseRecyclerOptions.Builder<Solicitar>()
                     .setQuery(pedidobyEstado, Solicitar.class)
                     .build();
         } else {
             //Query pedidobyUser = solicitudes.orderByChild("email").equalTo(email);
-            Query pedidobyUser = solicitudes.orderByChild("estado_email").equalTo("0" + "_" + email);
+            pedidobyUser = solicitudes.orderByChild("estado_email").equalTo(estado + "_" + email);
 
             //Query pedidobyUser = solicitudes.orderByChild("fecha");
             options = new FirebaseRecyclerOptions.Builder<Solicitar>()
@@ -182,6 +191,35 @@ public class PedidoEstado extends AppCompatActivity {
     }
 
     //Anmin fin ----------------------------------------------------------------------
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+
+        getMenuInflater().inflate(R.menu.pedido, menu);
+
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (item.getItemId() == R.id.colocado) {
+            cargarPedidos(Common.currentUser.getEmail(), "0");
+        } else if (item.getItemId() == R.id.en_proceso) {
+            cargarPedidos(Common.currentUser.getEmail(), "1");
+        } else if (item.getItemId() == R.id.completado) {
+            cargarPedidos(Common.currentUser.getEmail(), "2");
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     protected void onStart() {
