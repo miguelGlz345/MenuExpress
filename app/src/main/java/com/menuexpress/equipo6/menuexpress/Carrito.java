@@ -108,7 +108,23 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
 
 
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
-        final String num_pedido = String.valueOf(System.currentTimeMillis());
+        final String f = String.valueOf(System.currentTimeMillis());
+        //final String num_pedido;
+
+       /* int i = 0, cantidad = 4, rango = 10;
+        final int num_pedido[] = new int[cantidad + 1];
+
+        num_pedido[i] = (int) (Math.random() * rango);
+        for (i = 1; i < cantidad; i++) {
+            num_pedido[i] = (int) (Math.random() * rango);
+            for (int j = 0; j < i; j++) {
+                if (num_pedido[i] == num_pedido[j]) {
+                    i--;
+                }
+            }
+        }
+        final int k = i;*/
+
         //Si es si, se envia el pedido
         alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
@@ -125,14 +141,14 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
                         txtTotalPrecio.getText().toString(),
                         carrito,
                         "0",
-                        Common.getFecha(Long.parseLong(num_pedido)),
+                        Common.getFecha(Long.parseLong(f)),
                         currentHourText + ":" + currentMinuteText,
                         "0" + "_" + Common.currentUser.getEmail()
                 );
-                
+
                 //Eviar a firebase
-                String num_pedido = String.valueOf(System.currentTimeMillis());
-                resquest.child(num_pedido).setValue(solicitar);
+                //String num_pedido = String.valueOf(System.currentTimeMillis());
+                resquest.child(f).setValue(solicitar);
                 new Database(getBaseContext()).limpiarCarrito(Common.currentUser.getEmail());
                 Toast.makeText(Carrito.this, "Gracias, orden recibida", Toast.LENGTH_SHORT).show();
                 finish();

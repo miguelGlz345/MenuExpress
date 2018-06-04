@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/colocado"
+        android:icon="@drawable/ic_restaurant_black_24dp"
+        android:title="Colocado" />
+    <item
+        android:id="@+id/en_proceso"
+        android:icon="@drawable/ic_restaurant_black_24dp"
+        android:title="En proceso" />
+    <item
+        android:id="@+id/completado"
+        android:icon="@drawable/ic_restaurant_black_24dp"
+        android:title="Completado" />
+</menu>
