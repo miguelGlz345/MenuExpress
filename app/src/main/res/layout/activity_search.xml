@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayoutComida"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ListaComida">
+
+    <com.mancj.materialsearchbar.MaterialSearchBar
+        android:id="@+id/search_All"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        app:mt_hint="Buscar comida"
+        app:mt_speechMode="false" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/reclycler_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_All"
+        android:scrollbars="vertical" />
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.design.widget.CoordinatorLayout>
+
+
+</RelativeLayout>

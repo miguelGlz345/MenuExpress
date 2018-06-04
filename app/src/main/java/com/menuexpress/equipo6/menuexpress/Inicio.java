@@ -476,8 +476,8 @@ public class Inicio extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (item.getItemId() == R.id.Actualizar) {
-            cargarMenu();
+        if (item.getItemId() == R.id.searchAll) {
+            startActivity(new Intent(Inicio.this, SearchActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -490,7 +490,7 @@ public class Inicio extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_menu) {
-            // Handle the camera action
+            cargarMenu();
         } else if (id == R.id.nav_carro) {
             Intent cintent = new Intent(Inicio.this, Carrito.class);
             startActivity(cintent);
