@@ -62,15 +62,19 @@ public class PedidoEstado extends AppCompatActivity {
 
     private void cargarPedidos(String email) {
         FirebaseRecyclerOptions<Solicitar> options;
+        //String estado = Common.currentResquest.getEstado();
         //Admin
         if (Boolean.parseBoolean(Common.currentUser.getIsAdmin())) {
+            Query pedidobyEstado = solicitudes.orderByChild("estado");
 
             options = new FirebaseRecyclerOptions.Builder<Solicitar>()
-                    .setQuery(solicitudes, Solicitar.class)
+                    .setQuery(pedidobyEstado, Solicitar.class)
                     .build();
         } else {
-            Query pedidobyUser = solicitudes.orderByChild("email").equalTo(email);
+            //Query pedidobyUser = solicitudes.orderByChild("email").equalTo(email);
+            Query pedidobyUser = solicitudes.orderByChild("estado_email").equalTo("0" + "_" + email);
 
+            //Query pedidobyUser = solicitudes.orderByChild("fecha");
             options = new FirebaseRecyclerOptions.Builder<Solicitar>()
                     .setQuery(pedidobyUser, Solicitar.class)
                     .build();
@@ -115,12 +119,27 @@ public class PedidoEstado extends AppCompatActivity {
     //Admin ini ----------------------------------------------------------------------
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(final MenuItem item) {
         if (item.getTitle().equals(Common.UPDATE)) {
             mostrarDialogoActualizar(adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
         } else if (item.getTitle().equals(Common.DELETE)) {
-            eliminarPedido(adapter.getRef(item.getOrder()).getKey());
 
+            new AlertDialog.Builder(PedidoEstado.this)
+                    .setTitle("Confirmar eliminación")
+                    .setMessage("¿Está segura que desea eliminar este producto?")
+                    .setIcon(R.drawable.ic_delete_white_24dp)
+                    .setPositiveButton("CONFIRMAR",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                    eliminarPedido(adapter.getRef(item.getOrder()).getKey());
+                                }
+                            })
+                    .setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    }).show();
         }
         return super.onContextItemSelected(item);
     }
@@ -143,6 +162,7 @@ public class PedidoEstado extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 item.setEstado(String.valueOf(spinner.getSelectedIndex()));
+                item.setEstado_email(String.valueOf(spinner.getSelectedIndex()) + "_" + item.getEmail());
                 solicitudes.child(localKey).setValue(item);
             }
         });

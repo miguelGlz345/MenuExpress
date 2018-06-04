@@ -11,12 +11,14 @@ public class Solicitar {
     private String estado;
     private String fecha;
     private String hora;
+    private String estado_email;
+
     private List<Pedido> comidas; //la comida en el pedido
 
     public Solicitar() {
     }
 
-    public Solicitar(String nombre, String email, String total, List<Pedido> comidas, String estado, String fecha, String hora) {
+    public Solicitar(String nombre, String email, String total, List<Pedido> comidas, String estado, String fecha, String hora, String estado_email) {
         this.nombre = nombre;
         this.email = email;
         this.total = total;
@@ -24,6 +26,7 @@ public class Solicitar {
         this.estado = estado;
         this.fecha = fecha;
         this.hora = hora;
+        this.estado_email = estado_email;
     }
 
     public String getTelefono() {
@@ -88,6 +91,14 @@ public class Solicitar {
 
     public void setHora(String hora) {
         this.hora = hora;
+    }
+
+    public String getEstado_email() {
+        return estado_email;
+    }
+
+    public void setEstado_email(String estado_email) {
+        this.estado_email = estado_email;
     }
 
     public List<Pedido> getComidas() {

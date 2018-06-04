@@ -114,7 +114,7 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                myTimePicker.is24HourView();
+                myTimePicker.setIs24HourView(true);
                 String currentHourText = myTimePicker.getCurrentHour().toString();
                 String currentMinuteText = myTimePicker.getCurrentMinute().toString();
                 //Toast.makeText(Carrito.this, currentHourText + ":" + currentMinuteText, Toast.LENGTH_SHORT).show();;
@@ -126,9 +126,10 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
                         carrito,
                         "0",
                         Common.getFecha(Long.parseLong(num_pedido)),
-                        currentHourText + ":" + currentMinuteText
+                        currentHourText + ":" + currentMinuteText,
+                        "0" + "_" + Common.currentUser.getEmail()
                 );
-
+                
                 //Eviar a firebase
                 String num_pedido = String.valueOf(System.currentTimeMillis());
                 resquest.child(num_pedido).setValue(solicitar);

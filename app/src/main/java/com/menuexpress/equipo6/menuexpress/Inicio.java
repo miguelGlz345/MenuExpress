@@ -312,12 +312,27 @@ public class Inicio extends AppCompatActivity
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(final MenuItem item) {
         if (item.getTitle().equals(Common.UPDATE)) {
             mostrarDialogoActualizar(adapter.getRef(item.getOrder()).getKey(), adapter.getItem(item.getOrder()));
         } else if (item.getTitle().equals(Common.DELETE)) {
-            eliminarCategoría(adapter.getRef(item.getOrder()).getKey());
 
+            new AlertDialog.Builder(Inicio.this)
+                    .setTitle("Confirmar eliminación")
+                    .setMessage("¿Está segura que desea eliminar este producto?")
+                    .setIcon(R.drawable.ic_delete_white_24dp)
+                    .setPositiveButton("CONFIRMAR",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.dismiss();
+                                    eliminarCategoría(adapter.getRef(item.getOrder()).getKey());
+                                }
+                            })
+                    .setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    }).show();
         }
         return super.onContextItemSelected(item);
     }
