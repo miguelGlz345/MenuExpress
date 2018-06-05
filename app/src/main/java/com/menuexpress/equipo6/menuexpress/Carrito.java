@@ -35,6 +35,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import info.hoang8f.widget.FButton;
 
@@ -48,7 +49,7 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
     private RecyclerView.LayoutManager layoutManager;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference resquest;
+    private DatabaseReference solicitud;
 
     private RelativeLayout rootLayout;
 
@@ -62,7 +63,7 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
         //Iniciarlizar firebase
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
-        resquest = firebaseDatabase.getReference("solicitud");
+        solicitud = firebaseDatabase.getReference("solicitud");
 
         recyclerView = (RecyclerView) findViewById(R.id.listaCarrito);
         recyclerView.setHasFixedSize(true);
@@ -103,27 +104,9 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
         View view = inflater.inflate(R.layout.time_picker, null, false);
         final TimePicker myTimePicker = (TimePicker) view.findViewById(R.id.myTimePicker);
 
-
         alertDialog.setView(view);
-
-
         alertDialog.setIcon(R.drawable.ic_shopping_cart_black_24dp);
         final String f = String.valueOf(System.currentTimeMillis());
-        //final String num_pedido;
-
-       /* int i = 0, cantidad = 4, rango = 10;
-        final int num_pedido[] = new int[cantidad + 1];
-
-        num_pedido[i] = (int) (Math.random() * rango);
-        for (i = 1; i < cantidad; i++) {
-            num_pedido[i] = (int) (Math.random() * rango);
-            for (int j = 0; j < i; j++) {
-                if (num_pedido[i] == num_pedido[j]) {
-                    i--;
-                }
-            }
-        }
-        final int k = i;*/
 
         //Si es si, se envia el pedido
         alertDialog.setPositiveButton("SI", new DialogInterface.OnClickListener() {
@@ -146,9 +129,11 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
                         "0" + "_" + Common.currentUser.getEmail()
                 );
 
+                String folio = UUID.randomUUID().toString().toUpperCase().substring(0, 6);
+
                 //Eviar a firebase
                 //String num_pedido = String.valueOf(System.currentTimeMillis());
-                resquest.child(f).setValue(solicitar);
+                solicitud.child(folio).setValue(solicitar);
                 new Database(getBaseContext()).limpiarCarrito(Common.currentUser.getEmail());
                 Toast.makeText(Carrito.this, "Gracias, orden recibida", Toast.LENGTH_SHORT).show();
                 finish();
