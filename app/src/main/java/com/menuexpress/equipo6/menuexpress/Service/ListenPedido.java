@@ -65,7 +65,7 @@ public class ListenPedido extends Service implements ChildEventListener {
 
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setTicker("MemuExpress")
+                .setTicker("Menu Express")
                 .setContentInfo("Nuevo pedido")
                 .setContentText("Tienes un nuevo pedido #" + key)
                 .setSmallIcon(R.mipmap.ic_launcher)

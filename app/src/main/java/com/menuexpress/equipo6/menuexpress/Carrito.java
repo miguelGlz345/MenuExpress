@@ -83,7 +83,7 @@ public class Carrito extends AppCompatActivity implements RecyclerItemTouchHelpe
                 if (carrito.size() > 0)
                     showAlertDialog();
                 else
-                    Toast.makeText(Carrito.this, "El carrito está vacio", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Carrito.this, "El carrito está vacío", Toast.LENGTH_SHORT).show();
             }
         });
         cargarListaComida();

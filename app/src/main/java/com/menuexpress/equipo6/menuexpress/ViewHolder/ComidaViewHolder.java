@@ -42,7 +42,7 @@ public class ComidaViewHolder extends RecyclerView.ViewHolder implements View.On
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Seleccionar Opcion");
+        menu.setHeaderTitle("Seleccionar Opción");
         menu.add(0, 0, getAdapterPosition(), Common.UPDATE);
         menu.add(0, 0, getAdapterPosition(), Common.DELETE);
     }

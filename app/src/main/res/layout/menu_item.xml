@@ -22,7 +22,7 @@
             android:layout_alignParentBottom="true"
             android:background="@color/overlayBrackground"
             android:gravity="center"
-            android:text="Nombre del menu"
+            android:text="Nombre del menú"
             android:textColor="@color/blanco"
             android:textSize="20sp" />
 

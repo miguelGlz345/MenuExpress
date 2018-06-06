@@ -69,7 +69,7 @@ public class ListenPedidoAdmin extends Service implements ChildEventListener {
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setTicker("MemuExpress")
+                .setTicker("MenuExpress")
                 .setContentInfo("Tu pedido fue actualizado")
                 .setContentText("Pedido #" + key + " fue actualizado a " + Common.convertirCodigoEstado(solicitud.getEstado()))
                 .setContentIntent(contentIntent)

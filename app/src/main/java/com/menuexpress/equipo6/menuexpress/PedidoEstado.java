@@ -135,7 +135,7 @@ public class PedidoEstado extends AppCompatActivity {
 
             new AlertDialog.Builder(PedidoEstado.this)
                     .setTitle("Confirmar eliminación")
-                    .setMessage("¿Está segura que desea eliminar este producto?")
+                    .setMessage("¿Está seguro que desea eliminar este pedido?")
                     .setIcon(R.drawable.ic_delete_white_24dp)
                     .setPositiveButton("CONFIRMAR",
                             new DialogInterface.OnClickListener() {

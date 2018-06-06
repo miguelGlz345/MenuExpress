@@ -88,7 +88,7 @@ public class Inicio extends AppCompatActivity
         setContentView(R.layout.activity_inicio);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Menu");
+        toolbar.setTitle("Menú");
         setSupportActionBar(toolbar);
 
         //Iniciarlizar firebase
@@ -261,7 +261,7 @@ public class Inicio extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Common.PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             saveUri = data.getData();
-            adminBtnSelect.setText("Imagen Selccionada");
+            adminBtnSelect.setText("Imagen Seleccionada");
         }
     }
 
@@ -269,7 +269,7 @@ public class Inicio extends AppCompatActivity
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Seleccioar imagen"), Common.PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Seleccionar imagen"), Common.PICK_IMAGE_REQUEST);
     }
 
     public void subirImagen() {
@@ -319,7 +319,7 @@ public class Inicio extends AppCompatActivity
 
             new AlertDialog.Builder(Inicio.this)
                     .setTitle("Confirmar eliminación")
-                    .setMessage("¿Está segura que desea eliminar este producto?")
+                    .setMessage("¿Está seguro que desea eliminar este producto?")
                     .setIcon(R.drawable.ic_delete_white_24dp)
                     .setPositiveButton("CONFIRMAR",
                             new DialogInterface.OnClickListener() {

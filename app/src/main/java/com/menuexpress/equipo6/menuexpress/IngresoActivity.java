@@ -83,7 +83,7 @@ public class IngresoActivity extends AppCompatActivity {
         String pass = edtContraseña.getText().toString();
 
         final ProgressDialog progressDialog = new ProgressDialog(IngresoActivity.this);
-        progressDialog.setMessage("Iniciano sesión...");
+        progressDialog.setMessage("Iniciando sesión...");
         progressDialog.show();
 
         if (Common.isConnectedToInternet(getBaseContext())) {
@@ -129,7 +129,7 @@ public class IngresoActivity extends AppCompatActivity {
                                             startActivity(intent);
                                             progressDialog.dismiss();
                                             finish();
-                                            Toast.makeText(IngresoActivity.this, "Inicio de sesion correcto", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(IngresoActivity.this, "Inicio de sesión correcto", Toast.LENGTH_SHORT).show();
                                         }
 
                                     } else {
